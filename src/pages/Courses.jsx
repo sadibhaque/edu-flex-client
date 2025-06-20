@@ -1,4 +1,5 @@
 import CourseCard from "../components/CourseCard";
+import { motion } from 'framer-motion';
 
 const allCourses = [
     {
@@ -51,11 +52,14 @@ const allCourses = [
     },
 ];
 
-
-
 export default function CoursesPage() {
     return (
-        <div className="container mx-auto py-16">
+        <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+            className="container mx-auto py-16"
+        >
             <h1 className="text-4xl font-bold text-center mb-12">
                 All Courses
             </h1>
@@ -64,6 +68,6 @@ export default function CoursesPage() {
                     <CourseCard key={course.id} course={course} />
                 ))}
             </div>
-        </div>
+        </motion.div>
     );
 }

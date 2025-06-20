@@ -23,7 +23,7 @@ const navLinks = [
 
 export default function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [isLoggedIn, setIsLoggedIn] = useState(true);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     return (
         <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -40,7 +40,7 @@ export default function Navbar() {
                 <nav className="hidden md:flex flex-1 justify-center items-center gap-6 text-sm">
                     {navLinks.map((link) => (
                         <Link
-                            key={link.href}
+                            key={link.to}
                             to={link.to}
                             className="transition-colors hover:text-foreground/80 text-foreground/60"
                         >
@@ -98,6 +98,7 @@ export default function Navbar() {
                         </DropdownMenu>
                     ) : (
                         <nav className="flex items-center gap-2">
+                            <ModeToggle />
                             <Button
                                 asChild
                                 variant="ghost"
@@ -176,7 +177,6 @@ export default function Navbar() {
                             >
                                 <Link href="/register">Register</Link>
                             </Button>
-                            <ModeToggle />
                         </nav>
                     )}
                     {/* Mobile Menu Toggle */}
@@ -196,11 +196,14 @@ export default function Navbar() {
                 {isMenuOpen && (
                     <div className="absolute top-full left-0 w-full bg-background shadow-md md:hidden">
                         <nav className="flex flex-col space-y-2 p-4 items-end">
+                            <div className="mx-auto">
+                                <ModeToggle />
+                            </div>
                             {navLinks.map((link) => (
                                 <Link
                                     key={link.href}
                                     href={link.href}
-                                    className="rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent"
+                                    className="rounded-md mx-auto px-3 py-2 text-sm font-medium transition-colors hover:bg-accent"
                                     onClick={() => setIsMenuOpen(false)}
                                 >
                                     {link.label}
