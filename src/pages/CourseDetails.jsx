@@ -1,18 +1,21 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card";
-import { Calendar, Clock, User, BookOpen } from "lucide-react";
+    Calendar,
+    Clock,
+    BookOpen,
+    Star,
+    Users,
+    Award,
+    PlayCircle,
+} from "lucide-react";
 import { toast } from "sonner";
 import { Link } from "react-router";
 import { motion } from "framer-motion";
-import { div } from "motion/react-client";
+import { useParams } from 'react-router';
 
 // Mock Course Data (replace with actual API fetch)
 const mockCourses = [
@@ -26,10 +29,16 @@ const mockCourses = [
         imageUrl: "/placeholder.svg?width=800&height=450&text=React+Course",
         duration: "12 hours",
         addedAt: "2025-06-15",
+        rating: 4.8,
+        students: 1250,
+        level: "Beginner",
+        category: "Web Development",
         instructor: {
             name: "Jane Doe",
             email: "jane.doe@example.com",
             avatar: "/placeholder.svg?height=40&width=40&text=JD",
+            title: "Senior React Developer",
+            experience: "8+ years",
         },
     },
     {
@@ -42,10 +51,16 @@ const mockCourses = [
         imageUrl: "/placeholder.svg?width=800&height=450&text=Node.js+Course",
         duration: "18 hours",
         addedAt: "2025-06-10",
+        rating: 4.9,
+        students: 890,
+        level: "Advanced",
+        category: "Backend Development",
         instructor: {
             name: "John Smith",
             email: "john.smith@example.com",
             avatar: "/placeholder.svg?height=40&width=40&text=JS",
+            title: "Full Stack Engineer",
+            experience: "10+ years",
         },
     },
     {
@@ -58,10 +73,16 @@ const mockCourses = [
         imageUrl: "/placeholder.svg?width=800&height=450&text=Figma+Course",
         duration: "15 hours",
         addedAt: "2025-06-05",
+        rating: 4.7,
+        students: 2100,
+        level: "Intermediate",
+        category: "Design",
         instructor: {
             name: "Emily White",
             email: "emily.white@example.com",
             avatar: "/placeholder.svg?height=40&width=40&text=EW",
+            title: "Senior UX Designer",
+            experience: "6+ years",
         },
     },
 ];
@@ -114,7 +135,7 @@ export default function CourseDetails() {
 
     if (!course) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-[calc(100vh-15rem)] text-center px-4">
+            <div className="flex flex-col items-center justify-center min-h-[calc(100vh-15rem)] text-center">
                 <h1 className="text-9xl font-black text-primary/20">404</h1>
                 <h2 className="text-3xl font-bold mt-4">Course Not Found</h2>
                 <p className="mt-2 text-muted-foreground max-w-md">
@@ -177,194 +198,335 @@ export default function CourseDetails() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: "easeOut" }}
-            className="container mx-auto py-12 md:py-16"
+            className="min-h-screen "
         >
-            <Card className="overflow-hidden">
-                <CardHeader className="p-0">
-                    <div className="relative w-full h-64 md:h-96">
-                        <img
-                            src={course.imageUrl || "/placeholder.svg"}
-                            alt={course.title}
-                            layout="fill"
-                            objectFit="cover"
-                            className="rounded-t-lg"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-                        <div className="absolute bottom-0 left-0 p-6 text-white">
-                            <CardTitle className="text-3xl md:text-4xl font-bold mb-2">
-                                {course.title}
-                            </CardTitle>
-                            <CardDescription className="text-lg text-gray-200">
-                                {course.shortDescription}
-                            </CardDescription>
-                        </div>
-                    </div>
-                </CardHeader>
-                <CardContent className="p-6 md:p-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    <div className="lg:col-span-2">
-                        <h2 className="text-2xl font-bold mb-4">
-                            About This Course
-                        </h2>
-                        <p className="text-muted-foreground leading-relaxed mb-6">
-                            {course.description}
-                        </p>
-
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-                            <div className="flex items-center text-muted-foreground">
-                                <Clock className="h-5 w-5 mr-2 text-primary" />
-                                <span>Duration: {course.duration}</span>
-                            </div>
-                            <div className="flex items-center text-muted-foreground">
-                                <Calendar className="h-5 w-5 mr-2 text-primary" />
-                                <span>Added on: {course.addedAt}</span>
-                            </div>
-                            <div className="flex items-center text-muted-foreground">
-                                <User className="h-5 w-5 mr-2 text-primary" />
-                                <span>
-                                    Instructor: {course.instructor.name}
-                                </span>
-                            </div>
-                            <div className="flex items-center text-muted-foreground">
-                                <BookOpen className="h-5 w-5 mr-2 text-primary" />
-                                <span>Category: Web Development</span>{" "}
-                                {/* Placeholder */}
-                            </div>
-                        </div>
-
-                        <h3 className="text-xl font-bold mb-3">
-                            What You'll Learn
-                        </h3>
-                        <ul className="list-disc list-inside text-muted-foreground mb-6 space-y-1">
-                            <li>
-                                Build responsive user interfaces with React
-                                components.
-                            </li>
-                            <li>
-                                Manage application state effectively using React
-                                Hooks.
-                            </li>
-                            <li>
-                                Integrate with RESTful APIs to fetch and display
-                                data.
-                            </li>
-                            <li>
-                                Understand component lifecycle and performance
-                                optimization.
-                            </li>
-                            <li>
-                                Deploy your React applications to production.
-                            </li>
-                        </ul>
-
-                        <h3 className="text-xl font-bold mb-3">Requirements</h3>
-                        <ul className="list-disc list-inside text-muted-foreground space-y-1">
-                            <li>
-                                Basic understanding of HTML, CSS, and
-                                JavaScript.
-                            </li>
-                            <li>Familiarity with command line interface.</li>
-                            <li>A code editor like VS Code.</li>
-                        </ul>
-                    </div>
-
-                    <div className="lg:col-span-1 flex flex-col gap-6">
-                        <Card className="p-4">
-                            <h3 className="text-xl font-bold mb-4">
-                                Enroll Now
-                            </h3>
-                            <Button
-                                onClick={handleEnrollToggle}
-                                className="w-full text-lg py-6 transition-all duration-300"
-                                disabled={isLoading || !isLoggedIn}
-                            >
-                                {isLoading ? (
-                                    <span className="flex items-center">
-                                        <svg
-                                            className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            fill="none"
-                                            viewBox="0 0 24 24"
-                                        >
-                                            <circle
-                                                className="opacity-25"
-                                                cx="12"
-                                                cy="12"
-                                                r="10"
-                                                stroke="currentColor"
-                                                strokeWidth="4"
-                                            ></circle>
-                                            <path
-                                                className="opacity-75"
-                                                fill="currentColor"
-                                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                            ></path>
-                                        </svg>
-                                        {isEnrolled
-                                            ? "Unenrolling..."
-                                            : "Enrolling..."}
-                                    </span>
-                                ) : isEnrolled ? (
-                                    "Enrolled (Click to Unenroll)"
-                                ) : (
-                                    "Enroll Now"
-                                )}
-                            </Button>
-                            {!isLoggedIn && (
-                                <p className="text-sm text-center text-red-400 mt-2">
-                                    Please log in to enroll in this course.
-                                </p>
-                            )}
-                            {isLoggedIn &&
-                                userEnrollments.length >= MAX_ENROLLMENTS &&
-                                !isEnrolled && (
-                                    <p className="text-sm text-center text-yellow-400 mt-2">
-                                        You have reached your enrollment limit (
-                                        {MAX_ENROLLMENTS} courses).
-                                    </p>
-                                )}
-                        </Card>
-
-                        <Card className="p-4">
-                            <h3 className="text-xl font-bold mb-4">
-                                Instructor
-                            </h3>
-                            <div className="flex items-center gap-4">
+            {/* Hero Section */}
+            <div className="max-w-10/12 mx-auto">
+                <div className="" />
+                <div className="relative container mx-auto py-12">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                        {/* Course Image */}
+                        <motion.div
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.6, delay: 0.2 }}
+                            className="relative"
+                        >
+                            <div className="rounded-2xl overflow-hidden shadow-2xl border">
                                 <img
-                                    src={
-                                        course.instructor.avatar ||
-                                        "/placeholder.svg"
-                                    }
-                                    alt={course.instructor.name}
-                                    width={64}
-                                    height={64}
-                                    className="rounded-full object-cover"
+                                    src={"https://i.ibb.co/DDcpNXBf/image.png"}
+                                    alt={course.title}
+                                    className="w-full h-full object-cover"
                                 />
-                                <div>
-                                    <p className="font-semibold text-lg">
-                                        {course.instructor.name}
-                                    </p>
-                                    <p className="text-muted-foreground text-sm">
-                                        {course.instructor.email}
-                                    </p>
-                                    <Link
-                                        href="#"
-                                        className="text-primary text-sm hover:underline mt-1 block transition-colors"
-                                    >
-                                        View Instructor Profile
-                                    </Link>
+                            </div>
+                        </motion.div>
+
+                        {/* Course Info */}
+                        <motion.div
+                            initial={{ opacity: 0, x: 20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.6, delay: 0.3 }}
+                            className="space-y-6"
+                        >
+                            {/* Course Category & Level */}
+                            <div className="flex flex-wrap gap-2">
+                                <Badge variant="secondary" className="text-sm">
+                                    {course.category}
+                                </Badge>
+                                <Badge variant="outline" className="text-sm">
+                                    {course.level}
+                                </Badge>
+                            </div>
+
+                            {/* Course Title */}
+                            <h1 className="text-4xl md:text-5xl font-bold leading-tight">
+                                {course.title}
+                            </h1>
+
+                            {/* Short Description */}
+                            <p className="text-xl text-muted-foreground leading-relaxed">
+                                {course.shortDescription}
+                            </p>
+
+                            {/* Course Stats */}
+                            <div className="flex flex-wrap items-center gap-6 text-sm">
+                                <div className="flex items-center gap-2">
+                                    <div className="flex">
+                                        {[...Array(5)].map((_, i) => (
+                                            <Star
+                                                key={i}
+                                                className={`h-4 w-4 ${
+                                                    i <
+                                                    Math.floor(course.rating)
+                                                        ? "text-yellow-400 fill-yellow-400"
+                                                        : "text-gray-300"
+                                                }`}
+                                            />
+                                        ))}
+                                    </div>
+                                    <span className="font-semibold">
+                                        {course.rating}
+                                    </span>
+                                    <span className="text-muted-foreground">
+                                        ({course.students.toLocaleString()}{" "}
+                                        students)
+                                    </span>
+                                </div>
+                                <div className="flex items-center gap-2 text-muted-foreground">
+                                    <Clock className="h-4 w-4" />
+                                    <span>{course.duration}</span>
+                                </div>
+                                <div className="flex items-center gap-2 text-muted-foreground">
+                                    <Calendar className="h-4 w-4" />
+                                    <span>Updated {course.addedAt}</span>
                                 </div>
                             </div>
-                            <p className="text-muted-foreground text-sm mt-4">
-                                {course.instructor.name} is a seasoned expert
-                                with over 10 years of experience in web
-                                development, specializing in React and Node.js.
-                                He is passionate about teaching and helping
-                                students achieve their career goals.
-                            </p>
-                        </Card>
+
+                            {/* Enrollment Button */}
+                            <div className="pt-4">
+                                <Button
+                                    onClick={handleEnrollToggle}
+                                    size="lg"
+                                    className="w-full sm:w-auto text-lg px-8 py-4 transition-all duration-300"
+                                    disabled={isLoading || !isLoggedIn}
+                                >
+                                    {isLoading ? (
+                                        <span className="flex items-center gap-2">
+                                            <svg
+                                                className="animate-spin h-5 w-5"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <circle
+                                                    className="opacity-25"
+                                                    cx="12"
+                                                    cy="12"
+                                                    r="10"
+                                                    stroke="currentColor"
+                                                    strokeWidth="4"
+                                                ></circle>
+                                                <path
+                                                    className="opacity-75"
+                                                    fill="currentColor"
+                                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                                ></path>
+                                            </svg>
+                                            {isEnrolled
+                                                ? "Unenrolling..."
+                                                : "Enrolling..."}
+                                        </span>
+                                    ) : isEnrolled ? (
+                                        <span className="flex items-center gap-2">
+                                            <Award className="h-5 w-5" />
+                                            Enrolled - Continue Learning
+                                        </span>
+                                    ) : (
+                                        <span className="flex items-center gap-2">
+                                            <BookOpen className="h-5 w-5" />
+                                            Enroll Now
+                                        </span>
+                                    )}
+                                </Button>
+                                {!isLoggedIn && (
+                                    <p className="text-sm text-red-400 mt-2">
+                                        Please log in to enroll in this course.
+                                    </p>
+                                )}
+                                {isLoggedIn &&
+                                    userEnrollments.length >= MAX_ENROLLMENTS &&
+                                    !isEnrolled && (
+                                        <p className="text-sm text-yellow-400 mt-2">
+                                            You have reached your enrollment
+                                            limit ({MAX_ENROLLMENTS} courses).
+                                        </p>
+                                    )}
+                            </div>
+                        </motion.div>
                     </div>
-                </CardContent>
-            </Card>
+                </div>
+            </div>
+
+            {/* Content Section */}
+            <div className="container mx-auto py-16">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+                    {/* Main Content */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6, delay: 0.4 }}
+                        className="lg:col-span-2 space-y-8"
+                    >
+                        {/* About Course */}
+                        <Card className="shadow-lg">
+                            <CardHeader>
+                                <CardTitle className="text-2xl">
+                                    About This Course
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                                <p className="text-muted-foreground leading-relaxed text-lg">
+                                    {course.description}
+                                </p>
+
+                                <Separator />
+
+                                <div>
+                                    <h3 className="text-xl font-semibold mb-4">
+                                        What You'll Learn
+                                    </h3>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                        {[
+                                            "Build responsive user interfaces with React components",
+                                            "Manage application state effectively using React Hooks",
+                                            "Integrate with RESTful APIs to fetch and display data",
+                                            "Understand component lifecycle and performance optimization",
+                                            "Deploy your React applications to production",
+                                            "Best practices for modern React development",
+                                        ].map((item, index) => (
+                                            <div
+                                                key={index}
+                                                className="flex items-start gap-3"
+                                            >
+                                                <div className="w-2 h-2 rounded-full bg-primary mt-2 flex-shrink-0" />
+                                                <span className="text-muted-foreground">
+                                                    {item}
+                                                </span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <Separator />
+
+                                <div>
+                                    <h3 className="text-xl font-semibold mb-4">
+                                        Requirements
+                                    </h3>
+                                    <ul className="space-y-2">
+                                        {[
+                                            "Basic understanding of HTML, CSS, and JavaScript",
+                                            "Familiarity with command line interface",
+                                            "A code editor like VS Code",
+                                            "Node.js installed on your computer",
+                                        ].map((req, index) => (
+                                            <li
+                                                key={index}
+                                                className="flex items-start gap-3"
+                                            >
+                                                <div className="w-2 h-2 rounded-full bg-muted-foreground mt-2 flex-shrink-0" />
+                                                <span className="text-muted-foreground">
+                                                    {req}
+                                                </span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </motion.div>
+
+                    {/* Sidebar */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6, delay: 0.5 }}
+                        className="lg:col-span-1 space-y-6"
+                    >
+                        {/* Course Features */}
+                        <Card className="shadow-lg">
+                            <CardHeader>
+                                <CardTitle className="text-xl">
+                                    Course Features
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                                <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-2">
+                                        <Clock className="h-5 w-5 text-primary" />
+                                        <span>Duration</span>
+                                    </div>
+                                    <span className="font-semibold">
+                                        {course.duration}
+                                    </span>
+                                </div>
+                                <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-2">
+                                        <Users className="h-5 w-5 text-primary" />
+                                        <span>Students</span>
+                                    </div>
+                                    <span className="font-semibold">
+                                        {course.students.toLocaleString()}
+                                    </span>
+                                </div>
+                                <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-2">
+                                        <BookOpen className="h-5 w-5 text-primary" />
+                                        <span>Level</span>
+                                    </div>
+                                    <Badge variant="outline">
+                                        {course.level}
+                                    </Badge>
+                                </div>
+                                <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-2">
+                                        <Award className="h-5 w-5 text-primary" />
+                                        <span>Certificate</span>
+                                    </div>
+                                    <span className="font-semibold">Yes</span>
+                                </div>
+                            </CardContent>
+                        </Card>
+
+                        {/* Instructor */}
+                        <Card className="shadow-lg">
+                            <CardHeader>
+                                <CardTitle className="text-xl">
+                                    Your Instructor
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="flex items-start gap-4">
+                                    <img
+                                        src={
+                                            course.instructor.avatar ||
+                                            "/placeholder.svg"
+                                        }
+                                        alt={course.instructor.name}
+                                        width={80}
+                                        height={80}
+                                        className="rounded-full object-cover border-2 border-primary/20"
+                                    />
+                                    <div className="flex-1">
+                                        <h3 className="font-semibold text-lg">
+                                            {course.instructor.name}
+                                        </h3>
+                                        <p className="text-primary text-sm font-medium">
+                                            {course.instructor.title}
+                                        </p>
+                                        <p className="text-muted-foreground text-sm mt-1">
+                                            {course.instructor.experience}{" "}
+                                            experience
+                                        </p>
+                                        <Button
+                                            asChild
+                                            variant="outline"
+                                            size="sm"
+                                            className="mt-3 w-full"
+                                        >
+                                            <Link
+                                                href={`mailto:${course.instructor.email}`}
+                                            >
+                                                Contact Instructor
+                                            </Link>
+                                        </Button>
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </motion.div>
+                </div>
+            </div>
         </motion.div>
     );
 }
