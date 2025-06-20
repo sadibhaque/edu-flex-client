@@ -36,7 +36,7 @@ function CourseCard({ course }) {
             </CardContent>
             <CardFooter className="p-4 pt-0">
                 <Button asChild className="w-full transition-all duration-300">
-                    <Link href={`/courses/${course.id}`}>View Details</Link>
+                    <Link to={`/courses/${course.id}`}>View Details</Link>
                 </Button>
             </CardFooter>
         </Card>
