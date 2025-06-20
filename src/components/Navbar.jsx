@@ -74,7 +74,10 @@ export default function Navbar() {
                                 >
                                     <Avatar className="h-8 w-8">
                                         <AvatarImage
-                                            src="/placeholder.svg?height=32&width=32"
+                                            src={
+                                                user.photoURL ||
+                                                "https://i.pinimg.com/736x/2f/15/f2/2f15f2e8c688b3120d3d26467b06330c.jpg"
+                                            }
                                             alt="@shadcn"
                                         />
                                         <AvatarFallback>JD</AvatarFallback>
@@ -89,10 +92,10 @@ export default function Navbar() {
                                 <DropdownMenuLabel className="font-normal">
                                     <div className="flex flex-col space-y-1">
                                         <p className="text-sm font-medium leading-none">
-                                            Jane Doe
+                                            {user.displayName}
                                         </p>
                                         <p className="text-xs leading-none text-muted-foreground">
-                                            jane.doe@example.com
+                                            {user.email}
                                         </p>
                                     </div>
                                 </DropdownMenuLabel>
@@ -102,9 +105,7 @@ export default function Navbar() {
                                     Manage Courses
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />
-                                <DropdownMenuItem
-                                    onClick={handleLogout}
-                                >
+                                <DropdownMenuItem onClick={handleLogout}>
                                     Log out
                                 </DropdownMenuItem>
                             </DropdownMenuContent>

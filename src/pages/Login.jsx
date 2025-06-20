@@ -92,14 +92,14 @@ export function Login() {
                                 </div>
                                 <Input id="password" type="password" required />
                             </div>
+                            <Button type="submit" className="w-full">
+                                Login
+                            </Button>
                         </div>
                     </form>
                 </CardContent>
                 <CardFooter className="flex-col gap-2">
-                    <Button type="submit" className="w-full">
-                        Login
-                    </Button>
-                    <div className="flex gap-2 w-full mt-3">
+                    <div className="flex gap-2 w-full">
                         <div className="w-1/2" onClick={handleGoogleLogin}>
                             <Button variant="outline" className="w-full">
                                 <FaGoogle />

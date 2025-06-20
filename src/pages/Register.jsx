@@ -13,17 +13,14 @@ import { Label } from "@/components/ui/label";
 import { use, useState } from "react";
 import { FaGithub, FaGoogle } from "react-icons/fa";
 import { AuthContext } from "../provider/AuthProvider";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
+import { toast } from "sonner";
 
 export function Register() {
-    const {
-        createUser,
-        updateUser,
-        setUser,
-        user,
-        logoutUser,
-        loginWithGoogle,
-    } = use(AuthContext);
+    const location = useLocation();
+    const Navigate = useNavigate();
+    const { createUser, updateUser, setUser, user, loginWithGoogle } =
+        use(AuthContext);
     const [passwordError, setPasswordError] = useState("");
     const navigate = useNavigate();
     if (user) {
@@ -36,10 +33,12 @@ export function Register() {
         const email = e.target.email.value;
         const url = e.target.url.value;
         const password = e.target.password.value;
+        const password1 = e.target.password1.value;
 
-        let err = "";
+        let err = passwordError;
         if (password.length < 6)
             err = "Password must be at least 6 characters.";
+        else if (password !== password1) err = "Passwords do not match.";
         else if (!/[A-Z]/.test(password))
             err = "Password must contain at least one uppercase letter.";
         else if (!/[a-z]/.test(password))
@@ -47,6 +46,7 @@ export function Register() {
         if (err) {
             setPasswordError(err);
             toast.error(err);
+
             return;
         } else {
             setPasswordError("");
@@ -61,13 +61,13 @@ export function Register() {
                         displayName: name,
                         photoURL: url,
                     });
-                    // toast.success("Registration successful");
-                    logoutUser();
-                    navigate("/auth/login");
+                    toast.success("Registration successful");
+                    // logoutUser();
+                    navigate(`${location.state ? location.state : "/"}`);
                 });
             })
             .catch((error) => {
-                // toast.error(error.message);
+                toast.error(error.message);
                 console.error(error.message);
             });
     };
@@ -76,11 +76,11 @@ export function Register() {
         loginWithGoogle()
             .then((result) => {
                 setUser(result.user);
-                // toast.success("Login successful");
+                toast.success("Login successful");
                 navigate(location.state || "/");
             })
             .catch((error) => {
-                // toast.error(error.message);
+                toast.error(error.message);
                 console.error(error);
             });
     };
@@ -107,7 +107,6 @@ export function Register() {
                                 <Label htmlFor="text">Name</Label>
                                 <Input
                                     name="name"
-                                    type="text"
                                     placeholder="Enter your name"
                                     required
                                 />
@@ -153,13 +152,13 @@ export function Register() {
                                 />
                             </div>
                         </div>
+                        <Button type="submit" className="mt-4 w-full">
+                            Register
+                        </Button>
                     </form>
                 </CardContent>
                 <CardFooter className="flex-col gap-2">
-                    <Button type="submit" className="w-full">
-                        Login
-                    </Button>
-                    <div className="flex gap-2 w-full mt-3">
+                    <div className="flex gap-2 w-full">
                         <div className="w-1/2" onClick={handleGoogleLogin}>
                             <Button variant="outline" className="w-full">
                                 <FaGoogle />
