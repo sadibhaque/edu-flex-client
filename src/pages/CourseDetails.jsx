@@ -16,6 +16,7 @@ import { toast } from "sonner";
 import { Link } from "react-router";
 import { motion } from "framer-motion";
 import { useParams } from 'react-router';
+motion;
 
 // Mock Course Data (replace with actual API fetch)
 const mockCourses = [
@@ -107,6 +108,7 @@ export default function CourseDetails() {
 
     // Simulate login status
     const [isLoggedIn, setIsLoggedIn] = useState(true); // Set to true for testing logged-in state
+    setIsLoggedIn(true);
     // Simulate user's enrolled courses (array of course IDs)
     const [userEnrollments, setUserEnrollments] = useState(
         getInitialEnrollments()

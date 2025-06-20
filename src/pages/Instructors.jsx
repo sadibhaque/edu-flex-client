@@ -9,6 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { BookOpenCheck, Mail } from "lucide-react";
 import { motion, useInView } from "framer-motion";
+motion;
 import { useRef } from "react";
 
 // Mock Instructor Data

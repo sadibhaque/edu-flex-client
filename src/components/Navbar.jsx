@@ -29,7 +29,7 @@ export default function Navbar() {
         <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <div className="container mx-auto flex h-14 max-w-10/12 items-center justify-between">
                 {/* Logo - Always visible */}
-                <Link href="/" className="flex items-center space-x-2">
+                <Link to="/" className="flex items-center space-x-2">
                     <BookOpenCheck className="h-6 w-6 text-primary" />
                     <span className="hidden font-bold sm:inline-block">
                         EduFlex
@@ -104,13 +104,13 @@ export default function Navbar() {
                                 variant="ghost"
                                 className="transition-all duration-300"
                             >
-                                <Link href="/login">Login</Link>
+                                <Link to="/login">Login</Link>
                             </Button>
                             <Button
                                 asChild
                                 className="transition-all duration-300"
                             >
-                                <Link href="/register">Register</Link>
+                                <Link to="/register">Register</Link>
                             </Button>
                         </nav>
                     )}
@@ -169,13 +169,13 @@ export default function Navbar() {
                                 variant="ghost"
                                 className="transition-all duration-300"
                             >
-                                <Link href="/login">Login</Link>
+                                <Link to="/login">Login</Link>
                             </Button>
                             <Button
                                 asChild
                                 className="transition-all duration-300"
                             >
-                                <Link href="/register">Register</Link>
+                                <Link to="/register">Register</Link>
                             </Button>
                         </nav>
                     )}
@@ -201,8 +201,8 @@ export default function Navbar() {
                             </div>
                             {navLinks.map((link) => (
                                 <Link
-                                    key={link.href}
-                                    href={link.href}
+                                    key={link.to}
+                                    to={link.to}
                                     className="rounded-md mx-auto px-3 py-2 text-sm font-medium transition-colors hover:bg-accent"
                                     onClick={() => setIsMenuOpen(false)}
                                 >

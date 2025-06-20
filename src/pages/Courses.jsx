@@ -1,6 +1,8 @@
 import CourseCard from "../components/CourseCard";
 import { motion } from 'framer-motion';
 
+motion;
+
 const allCourses = [
     {
         id: 1,

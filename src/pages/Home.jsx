@@ -3,6 +3,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { motion, useInView } from "framer-motion";
+motion;
 import { Link } from "react-router";
 import {
     Accordion,
@@ -403,7 +404,7 @@ const Home = () => {
                         className="text-3xl md:text-4xl font-bold text-center mb-12"
                     >
                         Frequently Asked Questions
-                        
+
                     </motion.h2>
                     <Accordion type="single" collapsible className="w-full">
                         {faqItems.map((item, index) => (

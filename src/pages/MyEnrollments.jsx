@@ -19,6 +19,7 @@ import {
 import { toast } from "sonner";
 import { Trash2, ExternalLink } from "lucide-react";
 import { motion } from "framer-motion";
+motion;
 
 // Mock Course Data (reused from course details page for consistency)
 const mockCourses = [
