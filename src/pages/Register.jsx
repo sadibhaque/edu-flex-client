@@ -10,9 +10,80 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { use, useState } from "react";
 import { FaGithub, FaGoogle } from "react-icons/fa";
+import { AuthContext } from "../provider/AuthProvider";
+import { useNavigate } from "react-router";
 
 export function Register() {
+    const {
+        createUser,
+        updateUser,
+        setUser,
+        user,
+        logoutUser,
+        loginWithGoogle,
+    } = use(AuthContext);
+    const [passwordError, setPasswordError] = useState("");
+    const navigate = useNavigate();
+    if (user) {
+        return navigate("/");
+    }
+    const handleRegister = (e) => {
+        e.preventDefault();
+
+        const name = e.target.name.value;
+        const email = e.target.email.value;
+        const url = e.target.url.value;
+        const password = e.target.password.value;
+
+        let err = "";
+        if (password.length < 6)
+            err = "Password must be at least 6 characters.";
+        else if (!/[A-Z]/.test(password))
+            err = "Password must contain at least one uppercase letter.";
+        else if (!/[a-z]/.test(password))
+            err = "Password must contain at least one lowercase letter.";
+        if (err) {
+            setPasswordError(err);
+            toast.error(err);
+            return;
+        } else {
+            setPasswordError("");
+        }
+
+        createUser(email, password)
+            .then((userCredential) => {
+                const user = userCredential.user;
+                updateUser({ displayName: name, photoURL: url }).then(() => {
+                    setUser({
+                        ...user,
+                        displayName: name,
+                        photoURL: url,
+                    });
+                    // toast.success("Registration successful");
+                    logoutUser();
+                    navigate("/auth/login");
+                });
+            })
+            .catch((error) => {
+                // toast.error(error.message);
+                console.error(error.message);
+            });
+    };
+
+    const handleGoogleLogin = () => {
+        loginWithGoogle()
+            .then((result) => {
+                setUser(result.user);
+                // toast.success("Login successful");
+                navigate(location.state || "/");
+            })
+            .catch((error) => {
+                // toast.error(error.message);
+                console.error(error);
+            });
+    };
     return (
         <div className="my-20">
             <Card className="w-full max-w-sm mx-auto">
@@ -30,7 +101,7 @@ export function Register() {
                     </CardAction>
                 </CardHeader>
                 <CardContent>
-                    <form>
+                    <form onSubmit={handleRegister}>
                         <div className="flex flex-col gap-4">
                             <div className="grid gap-2">
                                 <Label htmlFor="text">Name</Label>
@@ -89,9 +160,11 @@ export function Register() {
                         Login
                     </Button>
                     <div className="flex gap-2 w-full mt-3">
-                        <Button variant="outline" className="w-1/2">
-                            <FaGoogle />
-                        </Button>
+                        <div className="w-1/2" onClick={handleGoogleLogin}>
+                            <Button variant="outline" className="w-full">
+                                <FaGoogle />
+                            </Button>
+                        </div>
                         <Button variant="outline" className="w-1/2">
                             <FaGithub />
                         </Button>

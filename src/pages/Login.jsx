@@ -12,9 +12,46 @@ import { FaGoogle } from "react-icons/fa";
 import { FaGithub } from "react-icons/fa";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useContext } from "react";
+import { useLocation, useNavigate } from "react-router";
+import { AuthContext } from '../provider/AuthProvider';
 
 
 export function Login() {
+    const { loginUser, loginWithGoogle, setUser } = useContext(AuthContext);
+    const location = useLocation();
+    const navigate = useNavigate();
+
+    const handleLogin = (e) => {
+        e.preventDefault();
+
+        const email = e.target.email.value;
+        const password = e.target.password.value;
+
+        loginUser(email, password)
+            .then((userCredential) => {
+                setUser(userCredential.user);
+                navigate(`${location.state ? location.state : "/"}`);
+                // toast.success("Login successful");
+            })
+            .catch((error) => {
+                // toast.error(error.message);
+                console.log(error.message);
+            });
+    };
+    const handleGoogleLogin = () => {
+        loginWithGoogle()
+            .then((result) => {
+                setUser(result.user);
+                // toast.success("Login successful");
+                navigate(`${location.state ? location.state : "/"}`);
+            })
+            .catch((error) => {
+                // toast.error(error.message);
+                console.error(error);
+            });
+    };
+
     return (
         <div className="my-20">
             <Card className="w-full max-w-sm mx-auto">
@@ -32,7 +69,7 @@ export function Login() {
                     </CardAction>
                 </CardHeader>
                 <CardContent>
-                    <form>
+                    <form onSubmit={handleLogin} className="space-y-6">
                         <div className="flex flex-col gap-6">
                             <div className="grid gap-2">
                                 <Label htmlFor="email">Email</Label>
@@ -63,9 +100,11 @@ export function Login() {
                         Login
                     </Button>
                     <div className="flex gap-2 w-full mt-3">
-                        <Button variant="outline" className="w-1/2">
-                            <FaGoogle />
-                        </Button>
+                        <div className="w-1/2" onClick={handleGoogleLogin}>
+                            <Button variant="outline" className="w-full">
+                                <FaGoogle />
+                            </Button>
+                        </div>
                         <Button variant="outline" className="w-1/2">
                             <FaGithub />
                         </Button>

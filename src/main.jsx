@@ -5,14 +5,16 @@ import router from './router/Router.jsx';
 import { RouterProvider } from 'react-router';
 import { ThemeProvider } from './provider/ThemeProvider.jsx';
 import { Toaster } from "@/components/ui/sonner"
-
+import AuthProvider from './provider/AuthProvider.jsx';
 
 
 createRoot(document.getElementById("root")).render(
     <StrictMode>
         <ThemeProvider>
-            <RouterProvider router={router} />
-            <Toaster />
+            <AuthProvider>
+                <RouterProvider router={router} />
+                <Toaster />
+            </AuthProvider>
         </ThemeProvider>
     </StrictMode>
 );

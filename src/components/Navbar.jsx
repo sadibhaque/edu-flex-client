@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { use, useState } from "react";
 import { Link } from "react-router";
 import { BookOpenCheck, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -12,6 +12,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ModeToggle } from "./ui/ModeToggle";
+import { AuthContext } from "../provider/AuthProvider";
 
 const navLinks = [
     { to: "/", label: "Home" },
@@ -22,8 +23,20 @@ const navLinks = [
 ];
 
 export default function Navbar() {
+    const { user, logoutUser } = use(AuthContext);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+    const handleLogout = (e) => {
+        e.preventDefault();
+
+        logoutUser()
+            .then(() => {
+                console.log("Successfully Signed Out!");
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
 
     return (
         <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -51,7 +64,7 @@ export default function Navbar() {
 
                 {/* Desktop Right-aligned Login/Profile */}
                 <div className="hidden md:flex items-center space-x-2">
-                    {isLoggedIn ? (
+                    {user ? (
                         <DropdownMenu>
                             <ModeToggle />
                             <DropdownMenuTrigger asChild>
@@ -90,7 +103,7 @@ export default function Navbar() {
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem
-                                    onClick={() => setIsLoggedIn(false)}
+                                    onClick={handleLogout}
                                 >
                                     Log out
                                 </DropdownMenuItem>
@@ -118,7 +131,7 @@ export default function Navbar() {
 
                 {/* Mobile Right-aligned group: Login/Profile + Menu Toggle */}
                 <div className="flex items-center space-x-2 md:hidden">
-                    {isLoggedIn ? (
+                    {user ? (
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <Button

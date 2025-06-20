@@ -8,6 +8,7 @@ import MyEnrollments from "../pages/MyEnrollments";
 import Instructors from "../pages/Instructors";
 import { Login } from "../pages/Login";
 import { Register } from "../pages/Register";
+import PrivateRoute from '../contexts/PrivateRoute';
 
 const router = createBrowserRouter([
     {
@@ -21,19 +22,33 @@ const router = createBrowserRouter([
             },
             {
                 path: "/courses/:id",
-                element: <CourseDetails />,
+                element: (
+                    <PrivateRoute>
+                        <CourseDetails />
+                    </PrivateRoute>
+                ),
             },
             {
                 path: "/add-course",
-                element: <AddCourse />,
+                element: (
+                    <PrivateRoute>
+                        <AddCourse />
+                    </PrivateRoute>
+                ),
             },
             {
                 path: "/my-enrollments",
-                element: <MyEnrollments></MyEnrollments>,
+                element: (
+                    <PrivateRoute>
+                        <MyEnrollments></MyEnrollments>
+                    </PrivateRoute>
+                ),
             },
             {
                 path: "/instructors",
-                element: <Instructors />,
+                element: (
+                        <Instructors />
+                ),
             },
             {
                 path: "*",
@@ -49,8 +64,8 @@ const router = createBrowserRouter([
             },
             {
                 path: "/register",
-                element: <Register></Register>
-            }
+                element: <Register></Register>,
+            },
         ],
     },
 ]);
