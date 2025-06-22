@@ -19,8 +19,14 @@ import { toast } from "sonner";
 export function Register() {
     const location = useLocation();
     const Navigate = useNavigate();
-    const { createUser, updateUser, setUser, user, loginWithGoogle } =
-        use(AuthContext);
+    const {
+        createUser,
+        updateUser,
+        setUser,
+        user,
+        loginWithGoogle,
+        loginWithGithub,
+    } = use(AuthContext);
     const [passwordError, setPasswordError] = useState("");
     const navigate = useNavigate();
     if (user) {
@@ -84,6 +90,21 @@ export function Register() {
                 console.error(error);
             });
     };
+
+    const handleGithubLogin = () => {
+        loginWithGithub()
+            .then((result) => {
+                console.log(result.user);
+                setUser(result.user);
+                toast.success("Login successful");
+                navigate(`${location.state ? location.state : "/"}`);
+            })
+            .catch((error) => {
+                toast.error(error.message);
+                console.error(error);
+            });
+    };
+
     return (
         <div className="my-20">
             <Card className="w-full max-w-sm mx-auto">
@@ -164,9 +185,11 @@ export function Register() {
                                 <FaGoogle />
                             </Button>
                         </div>
-                        <Button variant="outline" className="w-1/2">
-                            <FaGithub />
-                        </Button>
+                        <div className="w-1/2" onClick={handleGithubLogin}>
+                            <Button variant="outline" className="w-full">
+                                <FaGithub />
+                            </Button>
+                        </div>
                     </div>
                 </CardFooter>
             </Card>

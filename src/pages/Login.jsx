@@ -14,11 +14,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useContext } from "react";
 import { useLocation, useNavigate } from "react-router";
-import { AuthContext } from '../provider/AuthProvider';
-
+import { AuthContext } from "../provider/AuthProvider";
+import { toast } from "sonner";
 
 export function Login() {
-    const { loginUser, loginWithGoogle, setUser } = useContext(AuthContext);
+    const { loginUser, loginWithGoogle, loginWithGithub, setUser } =
+        useContext(AuthContext);
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -43,11 +44,25 @@ export function Login() {
         loginWithGoogle()
             .then((result) => {
                 setUser(result.user);
-                // toast.success("Login successful");
+                toast.success("Login successful");
                 navigate(`${location.state ? location.state : "/"}`);
             })
             .catch((error) => {
-                // toast.error(error.message);
+                toast.error(error.message);
+                console.error(error);
+            });
+    };
+
+    const handleGithubLogin = () => {
+        loginWithGithub()
+            .then((result) => {
+                console.log(result.user);
+                setUser(result.user);
+                toast.success("Login successful");
+                navigate(`${location.state ? location.state : "/"}`);
+            })
+            .catch((error) => {
+                toast.error(error.message);
                 console.error(error);
             });
     };
@@ -105,9 +120,11 @@ export function Login() {
                                 <FaGoogle />
                             </Button>
                         </div>
-                        <Button variant="outline" className="w-1/2">
-                            <FaGithub />
-                        </Button>
+                        <div className="w-1/2" onClick={handleGithubLogin}>
+                            <Button variant="outline" className="w-full">
+                                <FaGithub />
+                            </Button>
+                        </div>
                     </div>
                 </CardFooter>
             </Card>

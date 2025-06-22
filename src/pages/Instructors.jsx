@@ -166,11 +166,11 @@ export default function Instructors() {
                                     </ul>
                                 </div>
                             </CardContent>
-                            <div className="w-full">
+                            <div className="w-full bg-primary rounded-sm">
                                 <Button
                                     asChild
                                     variant="outline"
-                                    className="w-full bg-primary text-white hover:bg-primary hover:text-primary-foreground transition-all duration-300"
+                                    className="w-full h-full text-white border-primary bg-primary transition-all duration-300"
                                 >
                                     <a href={`mailto:${instructor.email}`}>
                                         <Mail className="h-4 w-4 mr-2" />{" "}

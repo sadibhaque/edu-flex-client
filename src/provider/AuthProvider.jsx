@@ -8,6 +8,7 @@ import {
     GoogleAuthProvider,
     signInWithPopup,
     updateProfile,
+    GithubAuthProvider,
 } from "firebase/auth";
 import app from "../firebase/firebase.init";
 
@@ -37,6 +38,12 @@ const AuthProvider = ({ children }) => {
         return signInWithPopup(auth, googleProvider);
     };
 
+    const githubProvider = new GithubAuthProvider();
+    const loginWithGithub = () => {
+        return signInWithPopup(auth, githubProvider);
+    };
+
+
     const updateUser = (updatedData) => {
         return updateProfile(auth.currentUser, updatedData);
     };
@@ -61,6 +68,7 @@ const AuthProvider = ({ children }) => {
         setLoading,
         updateUser,
         loginWithGoogle,
+        loginWithGithub,
     };
     return (
         <AuthContext.Provider value={authData}>{children}</AuthContext.Provider>
