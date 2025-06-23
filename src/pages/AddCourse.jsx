@@ -12,6 +12,8 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
+import { AuthContext } from "../provider/AuthProvider";
+import { use } from "react";
 motion;
 
 export default function AddCourse() {
@@ -20,6 +22,8 @@ export default function AddCourse() {
         shortDescription: "",
         imageUrl: "",
         duration: "",
+        date: new Date().toLocaleDateString(),
+        added: 0,
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -31,39 +35,41 @@ export default function AddCourse() {
         }));
     };
 
+    const { user } = use(AuthContext);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
 
-        // In a real application, you would get the logged-in user's email and name
-        // and the current time here, then send the data to your backend API.
-        const userEmail = "user@example.com"; // Placeholder
-        const userName = "Logged In User"; // Placeholder
-        const addedAt = new Date().toISOString(); // Current time
+        const userEmail = user.email;
 
         const courseData = {
             ...formData,
-            addedByEmail: userEmail,
-            addedByName: userName,
-            addedAt: addedAt,
+            email: userEmail,
         };
 
-        console.log("Submitting course data:", courseData);
-
-        // Simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 1500));
-
-        toast.success("Course added successfully!", {
-            description: `Title: ${formData.title}`,
-        });
+        fetch("https://eduflex-server.vercel.app/add-course", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(courseData),
+        })
+            .then((response) => response.json())
+            .then(() => {
+                toast.success("Course added successfully!");
+            })
+            .catch((error) => {
+                console.error("Error adding course:", error);
+            });
 
         // Reset form
-        setFormData({
-            title: "",
-            shortDescription: "",
-            imageUrl: "",
-            duration: "",
-        });
+        // setFormData({
+        //     title: "",
+        //     shortDescription: "",
+        //     imageUrl: "",
+        //     duration: "",
+        // });
         setIsSubmitting(false);
     };
 

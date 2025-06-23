@@ -29,6 +29,9 @@ import {
 import { Image } from "@radix-ui/react-avatar";
 import { useRef } from "react";
 import CourseCard from "../components/CourseCard";
+import { useState } from "react";
+import { useEffect } from "react";
+import Loading from '../components/Loading';
 
 const sliderItems = [
     {
@@ -48,51 +51,6 @@ const sliderItems = [
         title: "Design Stunning User Experiences",
         subtitle:
             "Master the art of UI/UX design with Figma, from wireframing to high-fidelity prototypes.",
-    },
-];
-
-const courses = [
-    {
-        id: 1,
-        title: "React for Beginners",
-        date: "2025-06-15",
-        image: "/placeholder.svg?width=400&height=225&text=React",
-        popular: true,
-    },
-    {
-        id: 2,
-        title: "Advanced Node.js",
-        date: "2025-06-10",
-        image: "/placeholder.svg?width=400&height=225&text=Node.js",
-        popular: true,
-    },
-    {
-        id: 3,
-        title: "UI/UX with Figma",
-        date: "2025-06-05",
-        image: "/placeholder.svg?width=400&height=225&text=Figma",
-        popular: false,
-    },
-    {
-        id: 4,
-        title: "Python for Data Science",
-        date: "2025-06-01",
-        image: "/placeholder.svg?width=400&height=225&text=Python",
-        popular: true,
-    },
-    {
-        id: 5,
-        title: "DevOps on AWS",
-        date: "2025-05-28",
-        image: "/placeholder.svg?width=400&height=225&text=AWS",
-        popular: false,
-    },
-    {
-        id: 6,
-        title: "Introduction to SQL",
-        date: "2025-05-25",
-        image: "/placeholder.svg?width=400&height=225&text=SQL",
-        popular: false,
     },
 ];
 
@@ -137,6 +95,61 @@ const faqItems = [
 ];
 
 const Home = () => {
+    const [courses, setCourses] = useState([]);
+    const [popularCourses, setPopularCourses] = useState([]);
+
+    useEffect(() => {
+        const fetchCourses = async () => {
+            try {
+                fetch("https://eduflex-server.vercel.app/latest-courses", {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        // Assuming the data is an array of course objects
+                        setIsLoading(false);
+                        setCourses(data);
+                        console.log("Fetched courses:", data);
+                    })
+                    .catch((error) => {
+                        console.error("Error fetching courses:", error);
+                    });
+            } catch (error) {
+                console.error("Error fetching courses:", error);
+            }
+        };
+        fetchCourses();
+    }, []);
+
+    useEffect(() => {
+        const fetchCourses = async () => {
+            try {
+                fetch("https://eduflex-server.vercel.app/latest-courses", {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        // Assuming the data is an array of course objects
+                        setIsLoading(false);
+                        setPopularCourses(data);
+                        console.log("Fetched courses:", data);
+                    })
+                    .catch((error) => {
+                        console.error("Error fetching courses:", error);
+                    });
+            } catch (error) {
+                console.error("Error fetching courses:", error);
+            }
+        };
+        fetchCourses();
+    }, []);
+
     const sectionTitleVariants = {
         hidden: { opacity: 0, y: 50 },
         visible: {
@@ -195,6 +208,7 @@ const Home = () => {
         autoplay: true,
         autoplaySpeed: 3000,
     };
+    const [isLoading, setIsLoading] = useState(true);
     return (
         <div>
             <section>
@@ -274,11 +288,18 @@ const Home = () => {
                             },
                         }}
                     >
-                        {courses.slice(0, 6).map((course) => (
-                            <motion.div key={course.id} variants={cardVariants}>
-                                <CourseCard course={course} />
-                            </motion.div>
-                        ))}
+                        {isLoading ? (
+                            <Loading />
+                        ) : (
+                            courses.slice(0, 6).map((course) => (
+                                <motion.div
+                                    key={course.id}
+                                    variants={cardVariants}
+                                >
+                                    <CourseCard course={course} />
+                                </motion.div>
+                            ))
+                        )}
                     </motion.div>
                 </div>
             </section>
@@ -307,17 +328,18 @@ const Home = () => {
                             },
                         }}
                     >
-                        {courses
-                            .filter((c) => c.popular)
-                            .slice(0, 6)
-                            .map((course) => (
+                        {isLoading ? (
+                            <Loading />
+                        ) : (
+                            popularCourses.slice(0, 3).map((course) => (
                                 <motion.div
                                     key={course.id}
                                     variants={cardVariants}
                                 >
                                     <CourseCard course={course} />
                                 </motion.div>
-                            ))}
+                            ))
+                        )}
                     </motion.div>
                 </div>
             </section>
@@ -404,7 +426,6 @@ const Home = () => {
                         className="text-3xl md:text-4xl font-bold text-center mb-12"
                     >
                         Frequently Asked Questions
-
                     </motion.h2>
                     <Accordion type="single" collapsible className="w-full">
                         {faqItems.map((item, index) => (
@@ -433,6 +454,3 @@ const Home = () => {
 };
 
 export default Home;
-
-
-

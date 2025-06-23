@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -12,128 +12,38 @@ import {
     Award,
     PlayCircle,
 } from "lucide-react";
-import { toast } from "sonner";
-import { Link } from "react-router";
+import { Link, useLoaderData } from "react-router";
 import { motion } from "framer-motion";
-import { useParams } from 'react-router';
+import { useParams } from "react-router";
 motion;
 
-// Mock Course Data (replace with actual API fetch)
-const mockCourses = [
-    {
-        id: "1",
-        title: "React for Beginners: Build Your First App",
-        shortDescription:
-            "Learn the fundamentals of React.js, including components, props, state, and hooks, by building a simple application from scratch.",
-        description:
-            "This comprehensive course is designed for absolute beginners to React.js. You'll start with the basics of JavaScript ES6, then dive into React components, JSX, props, and state management. We'll cover functional components, the useState and useEffect hooks, and how to build interactive user interfaces. By the end of the course, you'll have built a complete, small-scale React application and gained the confidence to tackle more complex projects.",
-        imageUrl: "/placeholder.svg?width=800&height=450&text=React+Course",
-        duration: "12 hours",
-        addedAt: "2025-06-15",
-        rating: 4.8,
-        students: 1250,
-        level: "Beginner",
-        category: "Web Development",
-        instructor: {
-            name: "Jane Doe",
-            email: "jane.doe@example.com",
-            avatar: "/placeholder.svg?height=40&width=40&text=JD",
-            title: "Senior React Developer",
-            experience: "8+ years",
-        },
-    },
-    {
-        id: "2",
-        title: "Advanced Node.js: REST APIs & Microservices",
-        shortDescription:
-            "Dive deep into Node.js to build robust RESTful APIs, implement authentication, and explore microservice architecture patterns.",
-        description:
-            "Take your Node.js skills to the next level. This course covers advanced topics like building scalable REST APIs with Express, implementing JWT authentication, integrating with MongoDB, and designing microservices. You'll learn about error handling, logging, testing, and deployment strategies to build production-ready backend applications.",
-        imageUrl: "/placeholder.svg?width=800&height=450&text=Node.js+Course",
-        duration: "18 hours",
-        addedAt: "2025-06-10",
-        rating: 4.9,
-        students: 890,
-        level: "Advanced",
-        category: "Backend Development",
-        instructor: {
-            name: "John Smith",
-            email: "john.smith@example.com",
-            avatar: "/placeholder.svg?height=40&width=40&text=JS",
-            title: "Full Stack Engineer",
-            experience: "10+ years",
-        },
-    },
-    {
-        id: "3",
-        title: "UI/UX Design with Figma: From Concept to Prototype",
-        shortDescription:
-            "Master Figma to create stunning user interfaces and engaging user experiences. Learn wireframing, prototyping, and design systems.",
-        description:
-            "This course is your complete guide to UI/UX design using Figma. You'll learn the entire design process, from understanding user needs and creating user flows to wireframing, prototyping, and building interactive mockups. We'll cover best practices for visual design, typography, color theory, and how to create reusable design components and systems. Perfect for aspiring UI/UX designers and developers looking to enhance their design skills.",
-        imageUrl: "/placeholder.svg?width=800&height=450&text=Figma+Course",
-        duration: "15 hours",
-        addedAt: "2025-06-05",
-        rating: 4.7,
-        students: 2100,
-        level: "Intermediate",
-        category: "Design",
-        instructor: {
-            name: "Emily White",
-            email: "emily.white@example.com",
-            avatar: "/placeholder.svg?height=40&width=40&text=EW",
-            title: "Senior UX Designer",
-            experience: "6+ years",
-        },
-    },
-];
-
-// Mock User Data and Enrollments (replace with actual auth/backend)
-const MOCK_LOGGED_IN_USER_EMAIL = "testuser@example.com";
-const MAX_ENROLLMENTS = 3;
-
-// Simulate local storage for persistent enrollment
-const getInitialEnrollments = () => {
-    if (typeof window !== "undefined") {
-        const stored = localStorage.getItem("userEnrollments");
-        return stored ? JSON.parse(stored) : [];
-    }
-    return [];
-};
-
 export default function CourseDetails() {
-    const params = useParams();
-    const courseId = params.id;
-    const course = mockCourses.find((c) => c.id === courseId);
+    const { id } = useParams();
+    const course = useLoaderData();
+    const MAX_ENROLLMENTS = 3;
 
-    // Simulate login status
-    const [isLoggedIn, setIsLoggedIn] = useState(true); // Set to true for testing logged-in state
-    setIsLoggedIn(true);
+    console.log("Course:", course);
+    console.log("Course ID:", id);
+
     // Simulate user's enrolled courses (array of course IDs)
-    const [userEnrollments, setUserEnrollments] = useState(
-        getInitialEnrollments()
-    );
+    const [userEnrollments] = useState([]);
     const [isEnrolled, setIsEnrolled] = useState(false);
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
 
-    useEffect(() => {
-        // Simulate checking enrollment status on page load
+    const handleEnrollToggle = () => {
         setIsLoading(true);
-        const storedEnrollments = getInitialEnrollments();
-        setUserEnrollments(storedEnrollments);
-        setIsEnrolled(storedEnrollments.includes(courseId));
-        setIsLoading(false);
-    }, [courseId]);
 
-    useEffect(() => {
-        // Persist enrollments to local storage
-        if (typeof window !== "undefined") {
-            localStorage.setItem(
-                "userEnrollments",
-                JSON.stringify(userEnrollments)
-            );
-        }
-    }, [userEnrollments]);
+        setTimeout(() => {
+            if (isEnrolled) {
+                setIsEnrolled(false);
+                // Remove from enrollments logic here
+            } else {
+                setIsEnrolled(true);
+                // Add to enrollments logic here
+            }
+            setIsLoading(false);
+        }, 1000);
+    };
 
     if (!course) {
         return (
@@ -150,51 +60,6 @@ export default function CourseDetails() {
         );
     }
 
-    const handleEnrollToggle = async () => {
-        if (!isLoggedIn) {
-            toast.error("Please log in to enroll in courses.", {
-                description: "You need an account to manage your enrollments.",
-            });
-            return;
-        }
-
-        setIsLoading(true); // Show loading spinner on button
-
-        // Simulate API call for enrollment/unenrollment
-        await new Promise((resolve) => setTimeout(resolve, 800));
-
-        if (isEnrolled) {
-            // Unenroll
-            const updatedEnrollments = userEnrollments.filter(
-                (id) => id !== courseId
-            );
-            setUserEnrollments(updatedEnrollments);
-            setIsEnrolled(false);
-            toast.info("Unenrolled successfully!", {
-                description: `You have been unenrolled from "${course.title}".`,
-            });
-        } else {
-            // Enroll
-            if (userEnrollments.length >= MAX_ENROLLMENTS) {
-                toast.error("Enrollment limit reached!", {
-                    description: `You can only enroll in a maximum of ${MAX_ENROLLMENTS} courses at a time. Please unenroll from another course first.`,
-                });
-                setIsLoading(false);
-                return;
-            }
-
-            // In a real app, you'd send MOCK_LOGGED_IN_USER_EMAIL and courseId to your backend
-            // to store in a separate collection (e.g., 'enrollments').
-            const updatedEnrollments = [...userEnrollments, courseId];
-            setUserEnrollments(updatedEnrollments);
-            setIsEnrolled(true);
-            toast.success("Enrolled successfully!", {
-                description: `You are now enrolled in "${course.title}".`,
-            });
-        }
-        setIsLoading(false);
-    };
-
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -202,7 +67,6 @@ export default function CourseDetails() {
             transition={{ duration: 0.5, ease: "easeOut" }}
             className="min-h-screen "
         >
-            {/* Hero Section */}
             <div className="max-w-10/12 mx-auto">
                 <div className="" />
                 <div className="relative container mx-auto py-12">
@@ -216,8 +80,11 @@ export default function CourseDetails() {
                         >
                             <div className="rounded-2xl overflow-hidden shadow-2xl border">
                                 <img
-                                    src={"https://i.ibb.co/DDcpNXBf/image.png"}
-                                    alt={course.title}
+                                    src={
+                                        course?.image ||
+                                        "https://i.ibb.co/DDcpNXBf/image.png"
+                                    }
+                                    alt={course?.title || "Course"}
                                     className="w-full h-full object-cover"
                                 />
                             </div>
@@ -233,21 +100,23 @@ export default function CourseDetails() {
                             {/* Course Category & Level */}
                             <div className="flex flex-wrap gap-2">
                                 <Badge variant="secondary" className="text-sm">
-                                    {course.category}
+                                    {course?.category || "Course"}
                                 </Badge>
                                 <Badge variant="outline" className="text-sm">
-                                    {course.level}
+                                    {course?.level || "All Levels"}
                                 </Badge>
                             </div>
 
                             {/* Course Title */}
                             <h1 className="text-4xl md:text-5xl font-bold leading-tight">
-                                {course.title}
+                                {course?.title || "Course Title"}
                             </h1>
 
                             {/* Short Description */}
                             <p className="text-xl text-muted-foreground leading-relaxed">
-                                {course.shortDescription}
+                                {course?.shortDescription ||
+                                    course?.description ||
+                                    "Course description"}
                             </p>
 
                             {/* Course Stats */}
@@ -259,7 +128,9 @@ export default function CourseDetails() {
                                                 key={i}
                                                 className={`h-4 w-4 ${
                                                     i <
-                                                    Math.floor(course.rating)
+                                                    Math.floor(
+                                                        course?.rating || 0
+                                                    )
                                                         ? "text-yellow-400 fill-yellow-400"
                                                         : "text-gray-300"
                                                 }`}
@@ -267,20 +138,27 @@ export default function CourseDetails() {
                                         ))}
                                     </div>
                                     <span className="font-semibold">
-                                        {course.rating}
+                                        {course?.rating || "New"}
                                     </span>
                                     <span className="text-muted-foreground">
-                                        ({course.students.toLocaleString()}{" "}
+                                        (
+                                        {(
+                                            course?.students || 0
+                                        ).toLocaleString()}{" "}
                                         students)
                                     </span>
                                 </div>
                                 <div className="flex items-center gap-2 text-muted-foreground">
                                     <Clock className="h-4 w-4" />
-                                    <span>{course.duration}</span>
+                                    <span>
+                                        {course?.duration || "Self-paced"}
+                                    </span>
                                 </div>
                                 <div className="flex items-center gap-2 text-muted-foreground">
                                     <Calendar className="h-4 w-4" />
-                                    <span>Updated {course.addedAt}</span>
+                                    <span>
+                                        Updated {course?.addedAt || "Recently"}
+                                    </span>
                                 </div>
                             </div>
 
@@ -290,7 +168,7 @@ export default function CourseDetails() {
                                     onClick={handleEnrollToggle}
                                     size="lg"
                                     className="w-full sm:w-auto text-lg px-8 py-4 transition-all duration-300"
-                                    disabled={isLoading || !isLoggedIn}
+                                    disabled={isLoading}
                                 >
                                     {isLoading ? (
                                         <span className="flex items-center gap-2">
@@ -330,13 +208,7 @@ export default function CourseDetails() {
                                         </span>
                                     )}
                                 </Button>
-                                {!isLoggedIn && (
-                                    <p className="text-sm text-red-400 mt-2">
-                                        Please log in to enroll in this course.
-                                    </p>
-                                )}
-                                {isLoggedIn &&
-                                    userEnrollments.length >= MAX_ENROLLMENTS &&
+                                {userEnrollments.length >= MAX_ENROLLMENTS &&
                                     !isEnrolled && (
                                         <p className="text-sm text-yellow-400 mt-2">
                                             You have reached your enrollment
@@ -368,7 +240,8 @@ export default function CourseDetails() {
                             </CardHeader>
                             <CardContent className="space-y-4">
                                 <p className="text-muted-foreground leading-relaxed text-lg">
-                                    {course.description}
+                                    {course?.description ||
+                                        "Course description not available."}
                                 </p>
 
                                 <Separator />
@@ -449,7 +322,7 @@ export default function CourseDetails() {
                                         <span>Duration</span>
                                     </div>
                                     <span className="font-semibold">
-                                        {course.duration}
+                                        {course?.duration || "Self-paced"}
                                     </span>
                                 </div>
                                 <div className="flex items-center justify-between">
@@ -458,7 +331,9 @@ export default function CourseDetails() {
                                         <span>Students</span>
                                     </div>
                                     <span className="font-semibold">
-                                        {course.students.toLocaleString()}
+                                        {(
+                                            course?.students || 0
+                                        ).toLocaleString()}
                                     </span>
                                 </div>
                                 <div className="flex items-center justify-between">
@@ -467,7 +342,7 @@ export default function CourseDetails() {
                                         <span>Level</span>
                                     </div>
                                     <Badge variant="outline">
-                                        {course.level}
+                                        {course?.level || "All Levels"}
                                     </Badge>
                                 </div>
                                 <div className="flex items-center justify-between">
@@ -491,24 +366,30 @@ export default function CourseDetails() {
                                 <div className="flex items-start gap-4">
                                     <img
                                         src={
-                                            course.instructor.avatar ||
-                                            "/placeholder.svg"
+                                            course?.instructor?.avatar ||
+                                            "/placeholder.svg?height=80&width=80&text=Instructor"
                                         }
-                                        alt={course.instructor.name}
+                                        alt={
+                                            course?.instructor?.name ||
+                                            "Instructor"
+                                        }
                                         width={80}
                                         height={80}
                                         className="rounded-full object-cover border-2 border-primary/20"
                                     />
                                     <div className="flex-1">
                                         <h3 className="font-semibold text-lg">
-                                            {course.instructor.name}
+                                            {course?.instructor?.name ||
+                                                course?.instructorName ||
+                                                "Course Instructor"}
                                         </h3>
                                         <p className="text-primary text-sm font-medium">
-                                            {course.instructor.title}
+                                            {course?.instructor?.title ||
+                                                "Experienced Educator"}
                                         </p>
                                         <p className="text-muted-foreground text-sm mt-1">
-                                            {course.instructor.experience}{" "}
-                                            experience
+                                            {course?.instructor?.experience ||
+                                                "Professional experience"}
                                         </p>
                                         <Button
                                             asChild
@@ -517,7 +398,11 @@ export default function CourseDetails() {
                                             className="mt-3 w-full"
                                         >
                                             <Link
-                                                href={`mailto:${course.instructor.email}`}
+                                                href={`mailto:${
+                                                    course?.instructor?.email ||
+                                                    course?.instructorEmail ||
+                                                    "instructor@example.com"
+                                                }`}
                                             >
                                                 Contact Instructor
                                             </Link>

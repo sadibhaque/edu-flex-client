@@ -8,7 +8,7 @@ import MyEnrollments from "../pages/MyEnrollments";
 import Instructors from "../pages/Instructors";
 import { Login } from "../pages/Login";
 import { Register } from "../pages/Register";
-import PrivateRoute from '../contexts/PrivateRoute';
+import PrivateRoute from "../contexts/PrivateRoute";
 
 const router = createBrowserRouter([
     {
@@ -27,6 +27,10 @@ const router = createBrowserRouter([
                         <CourseDetails />
                     </PrivateRoute>
                 ),
+                loader: ({ params }) =>
+                    fetch(
+                        `https://eduflex-server.vercel.app/courses/${params.id}`
+                    ),
             },
             {
                 path: "/add-course",
@@ -46,9 +50,7 @@ const router = createBrowserRouter([
             },
             {
                 path: "/instructors",
-                element: (
-                        <Instructors />
-                ),
+                element: <Instructors />,
             },
             {
                 path: "*",

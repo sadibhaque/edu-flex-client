@@ -21,8 +21,7 @@ function CourseCard({ course }) {
         <Card className="overflow-hidden py-0 transition-transform duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-primary/10">
             <CardHeader className="p-0">
                 <img
-                    // src={course.image || "/placeholder.svg"}
-                    src="https://i.ibb.co/DDcpNXBf/image.png"
+                    src={course.imageUrl}
                     alt={course.title}
                     className="h-50 w-full object-cover"
                 />
@@ -36,7 +35,7 @@ function CourseCard({ course }) {
             </CardContent>
             <CardFooter className="p-4 pt-0">
                 <Button asChild className="w-full transition-all duration-300">
-                    <Link to={`/courses/${course.id}`}>View Details</Link>
+                    <Link to={`/courses/${course._id}`}>View Details</Link>
                 </Button>
             </CardFooter>
         </Card>
