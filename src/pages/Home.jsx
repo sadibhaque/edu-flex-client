@@ -31,7 +31,7 @@ import { useRef } from "react";
 import CourseCard from "../components/CourseCard";
 import { useState } from "react";
 import { useEffect } from "react";
-import Loading from '../components/Loading';
+import Loading from "../components/Loading";
 
 const sliderItems = [
     {
@@ -112,7 +112,6 @@ const Home = () => {
                         // Assuming the data is an array of course objects
                         setIsLoading(false);
                         setCourses(data);
-                        console.log("Fetched courses:", data);
                     })
                     .catch((error) => {
                         console.error("Error fetching courses:", error);
@@ -138,7 +137,6 @@ const Home = () => {
                         // Assuming the data is an array of course objects
                         setIsLoading(false);
                         setPopularCourses(data);
-                        console.log("Fetched courses:", data);
                     })
                     .catch((error) => {
                         console.error("Error fetching courses:", error);
@@ -293,7 +291,7 @@ const Home = () => {
                         ) : (
                             courses.slice(0, 6).map((course) => (
                                 <motion.div
-                                    key={course.id}
+                                    key={course._id}
                                     variants={cardVariants}
                                 >
                                     <CourseCard course={course} />
@@ -333,7 +331,7 @@ const Home = () => {
                         ) : (
                             popularCourses.slice(0, 3).map((course) => (
                                 <motion.div
-                                    key={course.id}
+                                    key={course._id}
                                     variants={cardVariants}
                                 >
                                     <CourseCard course={course} />

@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import CourseCard from "../components/CourseCard";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import Loading from '../components/Loading';
+import Loading from "../components/Loading";
 
 motion;
 
@@ -26,7 +26,6 @@ export default function CoursesPage() {
                         // Assuming the data is an array of course objects
                         setIsLoading(false);
                         setCourses(data);
-                        console.log("Fetched courses:", data);
                     })
                     .catch((error) => {
                         console.error("Error fetching courses:", error);
@@ -37,9 +36,6 @@ export default function CoursesPage() {
         };
         fetchCourses();
     }, []);
-
-
-
 
     return (
         <motion.div
@@ -52,9 +48,13 @@ export default function CoursesPage() {
                 All Courses
             </h1>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                {isLoading ? <Loading /> : courses.map((course) => (
-                    <CourseCard key={course.id} course={course} />
-                ))}
+                {isLoading ? (
+                    <Loading />
+                ) : (
+                    courses.map((course) => (
+                        <CourseCard key={course._id} course={course} />
+                    ))
+                )}
             </div>
         </motion.div>
     );

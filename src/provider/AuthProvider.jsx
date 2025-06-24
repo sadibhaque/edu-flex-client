@@ -43,7 +43,6 @@ const AuthProvider = ({ children }) => {
         return signInWithPopup(auth, githubProvider);
     };
 
-
     const updateUser = (updatedData) => {
         return updateProfile(auth.currentUser, updatedData);
     };

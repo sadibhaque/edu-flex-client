@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { use, useEffect, useState } from "react";
 import { Link } from "react-router";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,79 +19,89 @@ import {
 import { toast } from "sonner";
 import { Trash2, ExternalLink } from "lucide-react";
 import { motion } from "framer-motion";
+import { AuthContext } from "../provider/AuthProvider";
+import useAxios from "../hooks/useAxios";
 motion;
 
-// Mock Course Data (reused from course details page for consistency)
-const mockCourses = [
-    {
-        id: "1",
-        title: "React for Beginners: Build Your First App",
-        shortDescription:
-            "Learn the fundamentals of React.js, including components, props, state, and hooks.",
-        imageUrl: "/placeholder.svg?width=400&height=225&text=React+Course",
-        duration: "12 hours",
-        addedAt: "2025-06-15",
-        instructor: { name: "Jane Doe" },
-    },
-    {
-        id: "2",
-        title: "Advanced Node.js: REST APIs & Microservices",
-        shortDescription:
-            "Dive deep into Node.js to build robust RESTful APIs and explore microservice architecture.",
-        imageUrl: "/placeholder.svg?width=400&height=225&text=Node.js+Course",
-        duration: "18 hours",
-        addedAt: "2025-06-10",
-        instructor: { name: "John Smith" },
-    },
-    {
-        id: "3",
-        title: "UI/UX Design with Figma: From Concept to Prototype",
-        shortDescription:
-            "Master Figma to create stunning user interfaces and engaging user experiences.",
-        imageUrl: "/placeholder.svg?width=400&height=225&text=Figma+Course",
-        duration: "15 hours",
-        addedAt: "2025-06-05",
-        instructor: { name: "Emily White" },
-    },
-    {
-        id: "4",
-        title: "Python for Data Science",
-        shortDescription:
-            "Learn Python, Machine Learning, and data visualization to solve real-world problems.",
-        imageUrl: "/placeholder.svg?width=400&height=225&text=Python+Course",
-        duration: "20 hours",
-        addedAt: "2025-06-01",
-        instructor: { name: "John Smith" },
-    },
-    {
-        id: "5",
-        title: "DevOps on AWS",
-        shortDescription:
-            "Master cloud deployment and infrastructure management on Amazon Web Services.",
-        imageUrl: "/placeholder.svg?width=400&height=225&text=AWS+Course",
-        duration: "25 hours",
-        addedAt: "2025-05-28",
-        instructor: { name: "Michael Brown" },
-    },
-];
-
 export default function MyEnrollments() {
-    const [enrolledCourses, setEnrolledCourses] = useState(mockCourses);
+    const [enrolledCourses, setEnrolledCourses] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const { user } = use(AuthContext);
+    const axiosSecure = useAxios();
 
-    const handleRemoveEnrollment = async (courseId, courseTitle) => {
+    useEffect(() => {
+        const fetchCourses = async () => {
+            try {
+                // fetch(
+                //     `http://localhost:3000/get-enrolled-courses/${user.email}`,
+                //     {
+                //         method: "GET",
+                //         headers: {
+                //             "Content-Type": "application/json",
+                //             Authorization: `Bearer ${user?.accessToken}`,
+                //         },
+                //     }
+                // )
+                    axiosSecure.get(`/get-enrolled-courses/${user.email}`)
+                    .then((response) => {
+                        setIsLoading(false);
+                        setEnrolledCourses(response.data);
+                    })
+                    .catch((error) => {
+                        console.error("Error fetching courses:", error);
+                    });
+            } catch (error) {
+                console.error("Error fetching courses:", error);
+            }
+        };
+        fetchCourses();
+    }, []);
+
+    const handleRemoveEnrollment = async (id, courseId) => {
         setIsLoading(true);
 
-        // Simulate API call to remove enrollment
-        await new Promise((resolve) => setTimeout(resolve, 800));
+        fetch(
+            `https://eduflex-server.vercel.app/decrease-course-count/${courseId}`,
+            {
+                method: "PATCH",
+            }
+        )
+            .then((response) => response.text())
+            .then((text) => {
+                let data = {};
+                try {
+                    data = text ? JSON.parse(text) : {};
+                    if (data) {
+                        console.log("Course count decreased:");
+                    }
+                } catch (error) {
+                    console.error("JSON parse error:", error);
+                }
+            })
+            .catch((error) => {
+                console.error("Error decreasing course count:", error);
+            });
+
+        fetch(`https://eduflex-server.vercel.app/remove-enrollment/${id}`, {
+            method: "DELETE",
+        })
+            .then((response) => response.json())
+            .then(() => {
+                console.log("Enrollment removal result:", "success");
+                toast.success("You have been unenrolled from the course.");
+            })
+            .catch((error) => {
+                console.error("Error removing enrollment:", error);
+                toast.error("Error during unenrollment!.");
+            });
 
         const updatedCourses = enrolledCourses.filter(
-            (course) => course.id !== courseId
+            (course) => course._id !== id
         );
         setEnrolledCourses(updatedCourses);
 
         toast.success("Enrollment removed!", {
-            description: `You have been unenrolled from "${courseTitle}".`,
+            description: `You have been unenrolled.`,
         });
         setIsLoading(false);
     };
@@ -166,7 +176,6 @@ export default function MyEnrollments() {
                                         </TableHead>
                                         <TableHead>Course Title</TableHead>
                                         <TableHead>Description</TableHead>
-                                        <TableHead>Instructor</TableHead>
                                         <TableHead className="text-center">
                                             Actions
                                         </TableHead>
@@ -174,12 +183,10 @@ export default function MyEnrollments() {
                                 </TableHeader>
                                 <TableBody>
                                     {enrolledCourses.map((course) => (
-                                        <TableRow key={course.id}>
+                                        <TableRow key={course._id}>
                                             <TableCell>
                                                 <img
-                                                    src={
-                                                        "https://i.ibb.co/DDcpNXBf/image.png"
-                                                    }
+                                                    src={course.imageUrl}
                                                     alt={course.title}
                                                     width={60}
                                                     height={40}
@@ -192,9 +199,6 @@ export default function MyEnrollments() {
                                             <TableCell className="text-muted-foreground max-w-[300px] truncate">
                                                 {course.shortDescription}
                                             </TableCell>
-                                            <TableCell>
-                                                {course.instructor.name}
-                                            </TableCell>
                                             <TableCell className="flex flex-col sm:flex-row items-center justify-center gap-2">
                                                 <Button
                                                     asChild
@@ -203,7 +207,7 @@ export default function MyEnrollments() {
                                                     className="bg-black text-white transition-all duration-300"
                                                 >
                                                     <Link
-                                                        href={`/courses/${course.id}`}
+                                                        to={`/courses/${course.courseId}`}
                                                     >
                                                         <ExternalLink className="h-4 w-4 mr-1" />{" "}
                                                         View
@@ -214,8 +218,8 @@ export default function MyEnrollments() {
                                                     size="sm"
                                                     onClick={() =>
                                                         handleRemoveEnrollment(
-                                                            course.id,
-                                                            course.title
+                                                            course._id,
+                                                            course.courseId
                                                         )
                                                     }
                                                     disabled={isLoading}

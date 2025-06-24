@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { use, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -15,20 +15,84 @@ import {
 import { Link, useLoaderData } from "react-router";
 import { motion } from "framer-motion";
 import { useParams } from "react-router";
+import { toast } from "sonner";
+import { AuthContext } from "../provider/AuthProvider";
 motion;
 
 export default function CourseDetails() {
     const { id } = useParams();
     const course = useLoaderData();
     const MAX_ENROLLMENTS = 3;
+    const { user } = use(AuthContext);
 
     console.log("Course:", course);
     console.log("Course ID:", id);
 
-    // Simulate user's enrolled courses (array of course IDs)
     const [userEnrollments] = useState([]);
     const [isEnrolled, setIsEnrolled] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [enrolledCourses, setEnrolledCourses] = useState([]);
+    const [enrolledCourse, setEnrolledCourse] = useState(null);
+    const [students, setStudents] = useState(course.added);
+
+    useEffect(() => {
+        const fetchCourses = async () => {
+            try {
+                fetch(
+                    `https://eduflex-server.vercel.app/get-enrolled-courses/${user.email}`,
+                    {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                    }
+                )
+                    .then((response) => response.json())
+                    .then((data) => {
+                        // Assuming the data is an array of course objects
+                        setIsLoading(false);
+                        setEnrolledCourses(data);
+                    })
+                    .catch((error) => {
+                        console.error("Error fetching courses:", error);
+                    });
+            } catch (error) {
+                console.error("Error fetching courses:", error);
+            }
+        };
+        fetchCourses();
+    }, []);
+
+    useEffect(() => {
+        const fetchCourses = async () => {
+            try {
+                fetch(
+                    `https://eduflex-server.vercel.app/get-enrolled-courses/${user.email}/${course._id}`,
+                    {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                    }
+                )
+                    .then((response) => response.json())
+                    .then((data) => {
+                        // Assuming the data is an array of course objects
+                        setIsLoading(false);
+                        if (data.length > 0) {
+                            setIsEnrolled(true);
+                            setEnrolledCourse(data[0]);
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Error fetching courses:", error);
+                    });
+            } catch (error) {
+                console.error("Error fetching courses:", error);
+            }
+        };
+        fetchCourses();
+    }, []);
 
     const handleEnrollToggle = () => {
         setIsLoading(true);
@@ -36,10 +100,104 @@ export default function CourseDetails() {
         setTimeout(() => {
             if (isEnrolled) {
                 setIsEnrolled(false);
-                // Remove from enrollments logic here
+
+                fetch(
+                    `https://eduflex-server.vercel.app/decrease-course-count/${course._id}`,
+                    {
+                        method: "PATCH",
+                    }
+                )
+                    .then((response) => response.text())
+                    .then((text) => {
+                        let data = {};
+                        try {
+                            data = text ? JSON.parse(text) : {};
+                            if (data) {
+                                console.log("Course count decreased:");
+                            }
+                        } catch (error) {
+                            console.error("JSON parse error:", error);
+                        }
+                        setStudents(students - 1);
+                    })
+                    .catch((error) => {
+                        console.error("Error decreasing course count:", error);
+                    });
+
+                fetch(
+                    `https://eduflex-server.vercel.app/remove-enrollment/${enrolledCourse._id}`,
+                    {
+                        method: "DELETE",
+                    }
+                )
+                    .then((response) => response.json())
+                    .then((data) => {
+                        console.log("Enrollment removal result:", data);
+                        toast.success(
+                            "You have been unenrolled from the course."
+                        );
+                    })
+                    .catch((error) => {
+                        console.error("Error removing enrollment:", error);
+                        toast.error("Error during unenrollment.");
+                    });
             } else {
+                if (enrolledCourses.length >= MAX_ENROLLMENTS) {
+                    setIsLoading(false);
+                    return toast.error(
+                        `You can only enroll in a maximum of ${MAX_ENROLLMENTS} courses.`
+                    );
+                } else if (course.added >= 10) {
+                    setIsLoading(false);
+                    return toast.error(`No seats left.`);
+                }
                 setIsEnrolled(true);
-                // Add to enrollments logic here
+
+                const data = {
+                    courseId: course._id,
+                    addBy: user.email,
+                    title: course.title,
+                    shortDescription: course.shortDescription,
+                    imageUrl: course.imageUrl,
+                };
+
+                fetch(
+                    `https://eduflex-server.vercel.app/increase-course-count/${course._id}`,
+                    {
+                        method: "PATCH",
+                    }
+                )
+                    .then((response) => response.text())
+                    .then((text) => {
+                        let data = {};
+                        try {
+                            data = text ? JSON.parse(text) : {};
+                            if (data) {
+                                console.log("Course count increased:");
+                            }
+                        } catch (error) {
+                            console.error("JSON parse error:", error);
+                        }
+                        setStudents(students + 1);
+                    })
+                    .catch((error) => {
+                        console.error("Error increasing course count:", error);
+                    });
+
+                fetch("https://eduflex-server.vercel.app/enroll", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(data),
+                })
+                    .then((response) => response.json())
+                    .then(() => {
+                        toast.success("Course added successfully!");
+                    })
+                    .catch((error) => {
+                        console.error("Error adding course:", error);
+                    });
             }
             setIsLoading(false);
         }, 1000);
@@ -81,7 +239,7 @@ export default function CourseDetails() {
                             <div className="rounded-2xl overflow-hidden shadow-2xl border">
                                 <img
                                     src={
-                                        course?.image ||
+                                        course?.imageUrl ||
                                         "https://i.ibb.co/DDcpNXBf/image.png"
                                     }
                                     alt={course?.title || "Course"}
@@ -141,10 +299,8 @@ export default function CourseDetails() {
                                         {course?.rating || "New"}
                                     </span>
                                     <span className="text-muted-foreground">
-                                        (
-                                        {(
-                                            course?.students || 0
-                                        ).toLocaleString()}{" "}
+                                        ({students}
+                                        {"/10 "}
                                         students)
                                     </span>
                                 </div>
@@ -152,12 +308,6 @@ export default function CourseDetails() {
                                     <Clock className="h-4 w-4" />
                                     <span>
                                         {course?.duration || "Self-paced"}
-                                    </span>
-                                </div>
-                                <div className="flex items-center gap-2 text-muted-foreground">
-                                    <Calendar className="h-4 w-4" />
-                                    <span>
-                                        Updated {course?.addedAt || "Recently"}
                                     </span>
                                 </div>
                             </div>
@@ -199,7 +349,7 @@ export default function CourseDetails() {
                                     ) : isEnrolled ? (
                                         <span className="flex items-center gap-2">
                                             <Award className="h-5 w-5" />
-                                            Enrolled - Continue Learning
+                                            Unenroll
                                         </span>
                                     ) : (
                                         <span className="flex items-center gap-2">
@@ -222,8 +372,8 @@ export default function CourseDetails() {
             </div>
 
             {/* Content Section */}
-            <div className="container mx-auto py-16">
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+            <div className="w-10/12 container mx-auto py-16">
+                <div className="gap-12">
                     {/* Main Content */}
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
@@ -232,7 +382,7 @@ export default function CourseDetails() {
                         className="lg:col-span-2 space-y-8"
                     >
                         {/* About Course */}
-                        <Card className="shadow-lg">
+                        {/* <Card className="shadow-lg">
                             <CardHeader>
                                 <CardTitle className="text-2xl">
                                     About This Course
@@ -298,7 +448,7 @@ export default function CourseDetails() {
                                     </ul>
                                 </div>
                             </CardContent>
-                        </Card>
+                        </Card> */}
                     </motion.div>
 
                     {/* Sidebar */}
@@ -306,10 +456,10 @@ export default function CourseDetails() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6, delay: 0.5 }}
-                        className="lg:col-span-1 space-y-6"
+                        className="mx-5 lg:mx-0 space-y-6 grid grid-cols-1 lg:grid-cols-2 gap-5"
                     >
                         {/* Course Features */}
-                        <Card className="shadow-lg">
+                        <Card className="shadow-lg w-full lg:mx-0">
                             <CardHeader>
                                 <CardTitle className="text-xl">
                                     Course Features
@@ -331,9 +481,7 @@ export default function CourseDetails() {
                                         <span>Students</span>
                                     </div>
                                     <span className="font-semibold">
-                                        {(
-                                            course?.students || 0
-                                        ).toLocaleString()}
+                                        {`${students} /10`}
                                     </span>
                                 </div>
                                 <div className="flex items-center justify-between">
@@ -356,7 +504,7 @@ export default function CourseDetails() {
                         </Card>
 
                         {/* Instructor */}
-                        <Card className="shadow-lg">
+                        <Card className="shadow-lg w-full lg:mx-0">
                             <CardHeader>
                                 <CardTitle className="text-xl">
                                     Your Instructor
