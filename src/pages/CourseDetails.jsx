@@ -17,6 +17,8 @@ import { motion } from "framer-motion";
 import { useParams } from "react-router";
 import { toast } from "sonner";
 import { AuthContext } from "../provider/AuthProvider";
+import useAxios from "../hooks/useAxios";
+import axios from "axios";
 motion;
 
 export default function CourseDetails() {
@@ -34,24 +36,16 @@ export default function CourseDetails() {
     const [enrolledCourses, setEnrolledCourses] = useState([]);
     const [enrolledCourse, setEnrolledCourse] = useState(null);
     const [students, setStudents] = useState(course.added);
+    const axiosSecure = useAxios();
 
     useEffect(() => {
         const fetchCourses = async () => {
             try {
-                fetch(
-                    `https://eduflex-server.vercel.app/get-enrolled-courses/${user.email}`,
-                    {
-                        method: "GET",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                    }
-                )
-                    .then((response) => response.json())
-                    .then((data) => {
-                        // Assuming the data is an array of course objects
+                axiosSecure
+                    .get(`/get-enrolled-courses/${user.email}`)
+                    .then((response) => {
                         setIsLoading(false);
-                        setEnrolledCourses(data);
+                        setEnrolledCourses(response.data);
                     })
                     .catch((error) => {
                         console.error("Error fetching courses:", error);
@@ -66,22 +60,13 @@ export default function CourseDetails() {
     useEffect(() => {
         const fetchCourses = async () => {
             try {
-                fetch(
-                    `https://eduflex-server.vercel.app/get-enrolled-courses/${user.email}/${course._id}`,
-                    {
-                        method: "GET",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                    }
-                )
-                    .then((response) => response.json())
-                    .then((data) => {
-                        // Assuming the data is an array of course objects
+                axiosSecure
+                    .get(`/get-enrolled-courses/${user.email}/${course._id}`)
+                    .then((response) => {
                         setIsLoading(false);
-                        if (data.length > 0) {
+                        if (response.data.length > 0) {
                             setIsEnrolled(true);
-                            setEnrolledCourse(data[0]);
+                            setEnrolledCourse(response.data[0]);
                         }
                     })
                     .catch((error) => {
@@ -101,38 +86,29 @@ export default function CourseDetails() {
             if (isEnrolled) {
                 setIsEnrolled(false);
 
-                fetch(
-                    `https://eduflex-server.vercel.app/decrease-course-count/${course._id}`,
-                    {
-                        method: "PATCH",
-                    }
-                )
-                    .then((response) => response.text())
-                    .then((text) => {
+                axiosSecure
+                    .patch(`/decrease-course-count/${course._id}`)
+                    .then((response) => {
                         let data = {};
                         try {
-                            data = text ? JSON.parse(text) : {};
+                            data = response.data
+                                ? JSON.parse(response.data)
+                                : {};
                             if (data) {
                                 console.log("Course count decreased:");
+                                setStudents(students - 1);
                             }
                         } catch (error) {
                             console.error("JSON parse error:", error);
                         }
-                        setStudents(students - 1);
                     })
                     .catch((error) => {
                         console.error("Error decreasing course count:", error);
                     });
 
-                fetch(
-                    `https://eduflex-server.vercel.app/remove-enrollment/${enrolledCourse._id}`,
-                    {
-                        method: "DELETE",
-                    }
-                )
-                    .then((response) => response.json())
-                    .then((data) => {
-                        console.log("Enrollment removal result:", data);
+                axiosSecure
+                    .delete(`/remove-enrollment/${enrolledCourse._id}`)
+                    .then(() => {
                         toast.success(
                             "You have been unenrolled from the course."
                         );
@@ -161,37 +137,28 @@ export default function CourseDetails() {
                     imageUrl: course.imageUrl,
                 };
 
-                fetch(
-                    `https://eduflex-server.vercel.app/increase-course-count/${course._id}`,
-                    {
-                        method: "PATCH",
-                    }
-                )
-                    .then((response) => response.text())
-                    .then((text) => {
+                axiosSecure
+                    .patch(`/increase-course-count/${course._id}`)
+                    .then((response) => {
                         let data = {};
                         try {
-                            data = text ? JSON.parse(text) : {};
+                            data = response.data
+                                ? JSON.parse(response.data)
+                                : {};
                             if (data) {
                                 console.log("Course count increased:");
+                                setStudents(students + 1);
                             }
                         } catch (error) {
                             console.error("JSON parse error:", error);
                         }
-                        setStudents(students + 1);
                     })
                     .catch((error) => {
                         console.error("Error increasing course count:", error);
                     });
 
-                fetch("https://eduflex-server.vercel.app/enroll", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(data),
-                })
-                    .then((response) => response.json())
+                axiosSecure
+                    .post(`/enroll`, data)
                     .then(() => {
                         toast.success("Course added successfully!");
                     })

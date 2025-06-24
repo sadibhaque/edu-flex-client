@@ -22,11 +22,7 @@ const router = createBrowserRouter([
             },
             {
                 path: "/courses/:id",
-                element: (
-                    <PrivateRoute>
-                        <CourseDetails />
-                    </PrivateRoute>
-                ),
+                element: <CourseDetails />,
                 loader: ({ params }) =>
                     fetch(
                         `https://eduflex-server.vercel.app/courses/${params.id}`

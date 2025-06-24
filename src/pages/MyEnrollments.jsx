@@ -32,17 +32,8 @@ export default function MyEnrollments() {
     useEffect(() => {
         const fetchCourses = async () => {
             try {
-                // fetch(
-                //     `http://localhost:3000/get-enrolled-courses/${user.email}`,
-                //     {
-                //         method: "GET",
-                //         headers: {
-                //             "Content-Type": "application/json",
-                //             Authorization: `Bearer ${user?.accessToken}`,
-                //         },
-                //     }
-                // )
-                    axiosSecure.get(`/get-enrolled-courses/${user.email}`)
+                axiosSecure
+                    .get(`/get-enrolled-courses/${user.email}`)
                     .then((response) => {
                         setIsLoading(false);
                         setEnrolledCourses(response.data);
@@ -60,17 +51,12 @@ export default function MyEnrollments() {
     const handleRemoveEnrollment = async (id, courseId) => {
         setIsLoading(true);
 
-        fetch(
-            `https://eduflex-server.vercel.app/decrease-course-count/${courseId}`,
-            {
-                method: "PATCH",
-            }
-        )
-            .then((response) => response.text())
-            .then((text) => {
+        axiosSecure
+            .patch(`/decrease-course-count/${courseId}`)
+            .then((response) => {
                 let data = {};
                 try {
-                    data = text ? JSON.parse(text) : {};
+                    data = response.data ? JSON.parse(response.data) : {};
                     if (data) {
                         console.log("Course count decreased:");
                     }
@@ -82,12 +68,10 @@ export default function MyEnrollments() {
                 console.error("Error decreasing course count:", error);
             });
 
-        fetch(`https://eduflex-server.vercel.app/remove-enrollment/${id}`, {
-            method: "DELETE",
-        })
-            .then((response) => response.json())
-            .then(() => {
-                console.log("Enrollment removal result:", "success");
+        axiosSecure
+            .delete(`/remove-enrollment/${id}`)
+            .then((response) => {
+                console.log("Enrollment removal result:", response.data);
                 toast.success("You have been unenrolled from the course.");
             })
             .catch((error) => {
@@ -99,10 +83,6 @@ export default function MyEnrollments() {
             (course) => course._id !== id
         );
         setEnrolledCourses(updatedCourses);
-
-        toast.success("Enrollment removed!", {
-            description: `You have been unenrolled.`,
-        });
         setIsLoading(false);
     };
 
@@ -163,7 +143,7 @@ export default function MyEnrollments() {
                                 asChild
                                 className="transition-all duration-300"
                             >
-                                <Link href="/courses">Browse Courses</Link>
+                                <Link to="/courses">Browse Courses</Link>
                             </Button>
                         </div>
                     ) : (

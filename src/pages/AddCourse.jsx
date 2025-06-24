@@ -14,9 +14,12 @@ import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { AuthContext } from "../provider/AuthProvider";
 import { use } from "react";
+import useAxios from "../hooks/useAxios";
 motion;
 
+
 export default function AddCourse() {
+    const axiosSecure = useAxios();
     const [formData, setFormData] = useState({
         title: "",
         shortDescription: "",
@@ -47,15 +50,8 @@ export default function AddCourse() {
             ...formData,
             email: userEmail,
         };
-
-        fetch("https://eduflex-server.vercel.app/add-course", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(courseData),
-        })
-            .then((response) => response.json())
+        axiosSecure
+            .post(`/add-course`, courseData)
             .then(() => {
                 toast.success("Course added successfully!");
             })
