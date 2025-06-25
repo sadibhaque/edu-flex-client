@@ -249,7 +249,7 @@ export default function CourseDetails() {
                                             Unenroll
                                         </span>
                                     ) : (
-                                        <span className="flex items-center gap-2">
+                                        <span className="flex text-white items-center gap-2">
                                             <BookOpen className="h-5 w-5" />
                                             Enroll Now
                                         </span>
