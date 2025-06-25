@@ -107,7 +107,7 @@ export function Login() {
                                 </div>
                                 <Input id="password" type="password" required />
                             </div>
-                            <Button type="submit" className="w-full">
+                            <Button type="submit" className="w-full text-white">
                                 Login
                             </Button>
                         </div>

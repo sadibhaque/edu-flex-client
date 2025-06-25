@@ -173,7 +173,7 @@ export function Register() {
                                 />
                             </div>
                         </div>
-                        <Button type="submit" className="mt-4 w-full">
+                        <Button type="submit" className="mt-4 w-full text-white">
                             Register
                         </Button>
                     </form>
