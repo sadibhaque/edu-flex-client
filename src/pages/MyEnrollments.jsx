@@ -87,7 +87,7 @@ export default function MyEnrollments() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: "easeOut" }}
-            className="container mx-auto py-12 md:py-16"
+            className="container mx-auto px-5 lg:px-0 py-12 md:py-16"
         >
             <Card>
                 <CardHeader>

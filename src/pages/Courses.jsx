@@ -42,7 +42,7 @@ export default function CoursesPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: "easeOut" }}
-            className="container mx-auto py-16"
+            className="container mx-auto py-1 px-5 lg:px-0 my-10"
         >
             <h1 className="text-4xl font-bold text-center mb-12">
                 All Courses

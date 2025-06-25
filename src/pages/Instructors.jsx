@@ -93,7 +93,7 @@ export default function Instructors() {
     };
 
     return (
-        <div className="container mx-auto py-12 md:py-16">
+        <div className="container mx-auto py-12 md:py-16 px-5 lg:px-0">
             <motion.h1
                 variants={titleVariants}
                 initial="hidden"
