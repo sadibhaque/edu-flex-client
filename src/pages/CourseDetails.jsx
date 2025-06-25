@@ -1,35 +1,19 @@
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import {
-    Calendar,
-    Clock,
-    BookOpen,
-    Star,
-    Users,
-    Award,
-    PlayCircle,
-} from "lucide-react";
+import { Clock, BookOpen, Star, Users, Award } from "lucide-react";
 import { Link, useLoaderData } from "react-router";
 import { motion } from "framer-motion";
-import { useParams } from "react-router";
 import { toast } from "sonner";
-import { AuthContext } from "../provider/AuthProvider";
 import useAxios from "../hooks/useAxios";
-import axios from "axios";
+import useAuth from "../hooks/useAuth";
+import Loading from "../components/Loading";
 motion;
 
 export default function CourseDetails() {
-    const { id } = useParams();
     const course = useLoaderData();
     const MAX_ENROLLMENTS = 3;
-    const { user } = use(AuthContext);
-
-    console.log("Course:", course);
-    console.log("Course ID:", id);
-
     const [userEnrollments] = useState([]);
     const [isEnrolled, setIsEnrolled] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -37,47 +21,34 @@ export default function CourseDetails() {
     const [enrolledCourse, setEnrolledCourse] = useState(null);
     const [students, setStudents] = useState(course.added);
     const axiosSecure = useAxios();
+    const { user, loading } = useAuth();
 
     useEffect(() => {
-        const fetchCourses = async () => {
-            try {
-                axiosSecure
-                    .get(`/get-enrolled-courses/${user.email}`)
-                    .then((response) => {
-                        setIsLoading(false);
-                        setEnrolledCourses(response.data);
-                    })
-                    .catch((error) => {
-                        console.error("Error fetching courses:", error);
-                    });
-            } catch (error) {
-                console.error("Error fetching courses:", error);
-            }
-        };
-        fetchCourses();
-    }, []);
+        if (loading) {
+            return;
+        }
+        axiosSecure
+            .get(`/get-enrolled-courses/${user.email}/${course._id}`)
+            .then((res) => {
+                console.log(res.data);
+                setEnrolledCourse(res.data);
+                if (course._id === res.data.courseId) {
+                    setIsEnrolled(true);
+                }
+                setIsLoading(false);
+            });
+    }, [user]);
 
     useEffect(() => {
-        const fetchCourses = async () => {
-            try {
-                axiosSecure
-                    .get(`/get-enrolled-courses/${user.email}/${course._id}`)
-                    .then((response) => {
-                        setIsLoading(false);
-                        if (response.data.length > 0) {
-                            setIsEnrolled(true);
-                            setEnrolledCourse(response.data[0]);
-                        }
-                    })
-                    .catch((error) => {
-                        console.error("Error fetching courses:", error);
-                    });
-            } catch (error) {
-                console.error("Error fetching courses:", error);
-            }
-        };
-        fetchCourses();
-    }, []);
+        if (loading) {
+            return;
+        }
+        axiosSecure.get(`/get-enrolled-courses/${user.email}`).then((res) => {
+            console.log(res.data);
+            setEnrolledCourses(res.data);
+            setIsLoading(false);
+        });
+    }, [user]);
 
     const handleEnrollToggle = () => {
         setIsLoading(true);
@@ -88,35 +59,15 @@ export default function CourseDetails() {
 
                 axiosSecure
                     .patch(`/decrease-course-count/${course._id}`)
-                    .then((response) => {
-                        let data = {};
-                        try {
-                            data = response.data
-                                ? JSON.parse(response.data)
-                                : {};
-                            if (data) {
-                                console.log("Course count decreased:");
-                                setStudents(students - 1);
-                            }
-                        } catch (error) {
-                            console.error("JSON parse error:", error);
-                        }
-                    })
-                    .catch((error) => {
-                        console.error("Error decreasing course count:", error);
-                    });
+                    .then(() => setStudents(students - 1));
 
                 axiosSecure
-                    .delete(`/remove-enrollment/${enrolledCourse._id}`)
-                    .then(() => {
+                    .delete(`/remove-enrollment/${enrolledCourse?._id}`)
+                    .then(() =>
                         toast.success(
                             "You have been unenrolled from the course."
-                        );
-                    })
-                    .catch((error) => {
-                        console.error("Error removing enrollment:", error);
-                        toast.error("Error during unenrollment.");
-                    });
+                        )
+                    );
             } else {
                 if (enrolledCourses.length >= MAX_ENROLLMENTS) {
                     setIsLoading(false);
@@ -131,7 +82,7 @@ export default function CourseDetails() {
 
                 const data = {
                     courseId: course._id,
-                    addBy: user.email,
+                    addBy: user?.email,
                     title: course.title,
                     shortDescription: course.shortDescription,
                     imageUrl: course.imageUrl,
@@ -139,32 +90,11 @@ export default function CourseDetails() {
 
                 axiosSecure
                     .patch(`/increase-course-count/${course._id}`)
-                    .then((response) => {
-                        let data = {};
-                        try {
-                            data = response.data
-                                ? JSON.parse(response.data)
-                                : {};
-                            if (data) {
-                                console.log("Course count increased:");
-                                setStudents(students + 1);
-                            }
-                        } catch (error) {
-                            console.error("JSON parse error:", error);
-                        }
-                    })
-                    .catch((error) => {
-                        console.error("Error increasing course count:", error);
-                    });
+                    .then(() => setStudents(students + 1));
 
-                axiosSecure
-                    .post(`/enroll`, data)
-                    .then(() => {
-                        toast.success("Course added successfully!");
-                    })
-                    .catch((error) => {
-                        console.error("Error adding course:", error);
-                    });
+                axiosSecure.post(`/enroll`, data).then(() => {
+                    toast.success("Course added successfully!");
+                });
             }
             setIsLoading(false);
         }, 1000);
@@ -482,7 +412,7 @@ export default function CourseDetails() {
                                     <img
                                         src={
                                             course?.instructor?.avatar ||
-                                            "/placeholder.svg?height=80&width=80&text=Instructor"
+                                            "https://media.licdn.com/dms/image/v2/D4D03AQETAp6s0-agkA/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1695071989377?e=2147483647&v=beta&t=R34TxTbPGVzCqijmv8JBKKBYf5GlkXSSClv8ldRksxs"
                                         }
                                         alt={
                                             course?.instructor?.name ||

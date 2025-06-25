@@ -1,19 +1,29 @@
-import React, { use } from "react";
 import axios from "axios";
-import { AuthContext } from "../provider/AuthProvider";
+import useAuth from "./useAuth";
 
 const instance = axios.create({
-    baseURL: "http://localhost:3000",
+    baseURL: "https://eduflex-server.vercel.app/",
 });
 
 const useAxios = () => {
-    const { user } = use(AuthContext);
-    instance.interceptors.request.use(
-        (config) => {
+    const { user } = useAuth();
+
+    instance.interceptors.request.use((config) => {
+        if (user?.accessToken) {
             config.headers.authorization = `Bearer ${user.accessToken}`;
-            return config;
+        }
+        return config;
+    });
+
+    instance.interceptors.response.use(
+        (response) => {
+            return response;
         },
         (error) => {
+            console.log(error);
+            if (error.status === 401 || error.status === 403) {
+                console.log("messed up");
+            }
             return Promise.reject(error);
         }
     );

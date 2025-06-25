@@ -32,22 +32,25 @@ import CourseCard from "../components/CourseCard";
 import { useState } from "react";
 import { useEffect } from "react";
 import Loading from "../components/Loading";
+import useAxios from "../hooks/useAxios";
 
 const sliderItems = [
     {
-        bgImage: "/placeholder.svg?width=1200&height=800&text=Modern+Web+Dev",
+        bgImage:
+            "https://i.ibb.co/5WpdR09b/BCO-74d5729d-5f8d-4385-9b01-de8b6b479893.png",
         title: "Master Modern Web Development",
         subtitle:
             "From fundamentals to advanced topics, become a full-stack developer with our project-based curriculum.",
     },
     {
-        bgImage: "/placeholder.svg?width=1200&height=800&text=Data+Science",
+        bgImage:
+            "https://i.ibb.co/3m7vkcy8/BCO-e3c472f7-9ada-4048-a3ef-63b27cf62a33.png",
         title: "Unlock the Power of Data Science",
         subtitle:
             "Learn Python, Machine Learning, and data visualization to solve real-world problems.",
     },
     {
-        bgImage: "/placeholder.svg?width=1200&height=800&text=UI/UX+Design",
+        bgImage: "https://i.ibb.co/ZzYzjXhX/image.png",
         title: "Design Stunning User Experiences",
         subtitle:
             "Master the art of UI/UX design with Figma, from wireframing to high-fidelity prototypes.",
@@ -59,19 +62,19 @@ const testimonials = [
         name: "Alex Johnson",
         role: "Software Engineer",
         text: "EduFlex transformed my career. The hands-on projects were invaluable.",
-        avatar: "/placeholder.svg?height=48&width=48&text=AJ",
+        avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSLfKxbQZ0BC6G_eNtYTFSvGt_GNIGkmjeu0ly1kfsLnkHyRetZKEqoWR1tOUqNjjtfQo4&usqp=CAU",
     },
     {
         name: "Maria Garcia",
         role: "UX Designer",
         text: "The design courses are top-notch. I landed my dream job thanks to the portfolio I built here.",
-        avatar: "/placeholder.svg?height=48&width=48&text=MG",
+        avatar: "https://www.chalmers.se/_next/image/?url=https%3A%2F%2Fcms.www.chalmers.se%2FMedia%2Fpyibgfo0%2Femmary.jpg%3Fwidth%3D512%26height%3D512%26v%3D1da3f07f5c79670%26quality%3D60%26format%3Dwebp&w=3840&q=90",
     },
     {
         name: "Sam Lee",
         role: "Data Analyst",
         text: "I went from zero to hero in Python and data analysis. The instructors are amazing!",
-        avatar: "/placeholder.svg?height=48&width=48&text=SL",
+        avatar: "https://media.licdn.com/dms/image/v2/D4E03AQGt6lxaitBD9Q/profile-displayphoto-shrink_400_400/B4EZZeeJ_qHMAk-/0/1745341689600?e=2147483647&v=beta&t=DLu1cGkjNqmnqi08Anhf2Y2bcNg6kREGPSKG85Nwpds",
     },
 ];
 
@@ -97,6 +100,7 @@ const faqItems = [
 const Home = () => {
     const [courses, setCourses] = useState([]);
     const [popularCourses, setPopularCourses] = useState([]);
+    const axiosSecure = useAxios();
 
     useEffect(() => {
         const fetchCourses = async () => {
@@ -126,17 +130,11 @@ const Home = () => {
     useEffect(() => {
         const fetchCourses = async () => {
             try {
-                fetch("https://eduflex-server.vercel.app/latest-courses", {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                })
-                    .then((response) => response.json())
-                    .then((data) => {
-                        // Assuming the data is an array of course objects
+                axiosSecure
+                    .get(`/popular-courses`)
+                    .then((response) => {
                         setIsLoading(false);
-                        setPopularCourses(data);
+                        setPopularCourses(response.data);
                     })
                     .catch((error) => {
                         console.error("Error fetching courses:", error);
@@ -198,18 +196,20 @@ const Home = () => {
     const faqRef = useRef(null);
     const faqInView = useInView(faqRef, { once: true, amount: 0.3 });
     var settings = {
-        dots: true,
         infinite: true,
         speed: 500,
         slidesToShow: 1,
         slidesToScroll: 1,
         autoplay: true,
         autoplaySpeed: 3000,
+        nextArrow: <NextArrow />,
+        prevArrow: <PrevArrow />,
     };
+
     const [isLoading, setIsLoading] = useState(true);
     return (
         <div>
-            <section>
+            <section className="relative">
                 <Slider {...settings}>
                     {sliderItems.map((item, index) => (
                         <div
@@ -217,10 +217,9 @@ const Home = () => {
                             className="relative h-[60vh] md:h-[80vh]"
                         >
                             <img
-                                src={item.bgImage || "/placeholder.svg"}
+                                src={item.bgImage}
                                 alt={item.title}
-                                layout="fill"
-                                className="z-0"
+                                className="absolute z-0 w-full h-full object-cover"
                             />
                             <div className="absolute inset-0 bg-black/60 z-10" />
                             <div className="relative z-20 container mx-auto flex flex-col items-center justify-center h-full text-center text-white">
@@ -248,9 +247,9 @@ const Home = () => {
                                     <Button
                                         size="lg"
                                         asChild
-                                        className="transition-all duration-300"
+                                        className="transition-all text-white duration-300"
                                     >
-                                        <Link href="/courses">
+                                        <Link to="/courses">
                                             Explore Courses{" "}
                                             <ArrowRight className="ml-2 h-5 w-5" />
                                         </Link>
@@ -303,7 +302,7 @@ const Home = () => {
             </section>
 
             {/* Popular Courses Section */}
-            <section className="py-16 md:py-24 bg-secondary">
+            <section className="py-16 md:py-24 bg-accent">
                 <div className="container mx-auto">
                     <motion.h2
                         ref={popularCoursesRef}
@@ -414,7 +413,7 @@ const Home = () => {
             </section>
 
             {/* FAQ Section */}
-            <section className="py-16 md:py-24 bg-secondary">
+            <section className="py-16 md:py-24 bg-accent">
                 <div className="container mx-auto max-w-3xl">
                     <motion.h2
                         ref={faqRef}
@@ -452,3 +451,20 @@ const Home = () => {
 };
 
 export default Home;
+
+const NextArrow = ({ onClick }) => (
+    <div
+        className="absolute top-1/2 right-4 transform -translate-y-1/2 z-20 cursor-pointer"
+        onClick={onClick}
+    >
+        <ChevronRight size={30} color="white" />
+    </div>
+);
+const PrevArrow = ({ onClick }) => (
+    <div
+        className="absolute top-1/2 left-4 transform -translate-y-1/2 z-20 cursor-pointer"
+        onClick={onClick}
+    >
+        <ChevronLeft size={30} color="white" />
+    </div>
+);

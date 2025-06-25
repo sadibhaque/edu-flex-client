@@ -1,20 +1,19 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import router from './router/Router.jsx';
-import { RouterProvider } from 'react-router';
-import { ThemeProvider } from './provider/ThemeProvider.jsx';
-import { Toaster } from "@/components/ui/sonner"
-import AuthProvider from './provider/AuthProvider.jsx';
-
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import "./index.css";
+import router from "./router/Router.jsx";
+import { RouterProvider } from "react-router";
+import { ThemeProvider } from "./provider/ThemeProvider.jsx";
+import { Toaster } from "@/components/ui/sonner";
+import AuthProvider from "./provider/AuthProvider.jsx";
 
 createRoot(document.getElementById("root")).render(
     <StrictMode>
-        <ThemeProvider>
-            <AuthProvider>
+        <AuthProvider>
+            <ThemeProvider>
                 <RouterProvider router={router} />
                 <Toaster />
-            </AuthProvider>
-        </ThemeProvider>
+            </ThemeProvider>
+        </AuthProvider>
     </StrictMode>
 );

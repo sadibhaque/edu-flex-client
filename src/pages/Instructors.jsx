@@ -16,10 +16,10 @@ import { useRef } from "react";
 const instructors = [
     {
         id: "inst1",
-        name: "Jane Doe",
+        name: "James Bond",
         title: "Lead Web Development Instructor",
         bio: "Jane is a seasoned full-stack developer with over 10 years of experience in building scalable web applications. She specializes in React, Node.js, and modern database technologies. Jane is passionate about teaching and empowering the next generation of developers.",
-        image: "/placeholder.svg?width=150&height=150&text=Jane+Doe",
+        image: "https://media.licdn.com/dms/image/v2/D4D03AQEZ1GoyR8NBeg/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1690989017025?e=2147483647&v=beta&t=JNBCxNO7uqACn-WMPAVddwnnGdmqcYpu6jiz2E7YS7s",
         courses: [
             { id: "1", title: "React for Beginners: Build Your First App" },
             { id: "2", title: "Advanced Node.js: REST APIs & Microservices" },
@@ -29,10 +29,10 @@ const instructors = [
     },
     {
         id: "inst2",
-        name: "John Smith",
+        name: "Jackie Chan",
         title: "Data Science & AI Expert",
         bio: "John holds a Ph.D. in Artificial Intelligence and has worked on various data-driven projects for Fortune 500 companies. His expertise lies in Machine Learning, Python, and Big Data analytics. He loves simplifying complex concepts for his students.",
-        image: "/placeholder.svg?width=150&height=150&text=John+Smith",
+        image: "https://media.licdn.com/dms/image/v2/D4E03AQGt6lxaitBD9Q/profile-displayphoto-shrink_400_400/B4EZZeeJ_qHMAk-/0/1745341689600?e=2147483647&v=beta&t=DLu1cGkjNqmnqi08Anhf2Y2bcNg6kREGPSKG85Nwpds",
         courses: [
             { id: "4", title: "Python for Data Science" },
             { id: "6", title: "Introduction to SQL" },
@@ -42,10 +42,10 @@ const instructors = [
     },
     {
         id: "inst3",
-        name: "Emily White",
+        name: "Jhon Snow",
         title: "UI/UX Design Lead",
         bio: "Emily is an award-winning UI/UX designer with a keen eye for aesthetics and user-centric design. She has led design teams for major tech companies and is proficient in Figma, Sketch, and Adobe XD. Emily believes good design can change the world.",
-        image: "/placeholder.svg?width=150&height=150&text=Emily+White",
+        image: "https://cdn.prod.website-files.com/63f1f58039379743bd96333e/64132459716e673b3ffe47a8_collaborator_luis-salamanca_picture1.jpeg",
         courses: [
             {
                 id: "3",
@@ -60,7 +60,7 @@ const instructors = [
         name: "Michael Brown",
         title: "Cloud & Cybersecurity Specialist",
         bio: "Michael is a certified cloud architect and cybersecurity professional. He has extensive experience in securing cloud infrastructures and implementing robust network defenses. He's dedicated to teaching practical skills for real-world security challenges.",
-        image: "/placeholder.svg?width=150&height=150&text=Michael+Brown",
+        image: "https://media.licdn.com/dms/image/v2/D4D03AQETAp6s0-agkA/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1695071989377?e=2147483647&v=beta&t=R34TxTbPGVzCqijmv8JBKKBYf5GlkXSSClv8ldRksxs",
         courses: [
             { id: "5", title: "DevOps on AWS" },
             { id: "9", title: "Cybersecurity Fundamentals" }, // Example new course
@@ -131,7 +131,7 @@ export default function Instructors() {
                     <motion.div key={instructor.id} variants={cardVariants}>
                         <Card className="flex flex-col items-center text-center p-6 max-w-11/12 mx-auto shadow-lg hover:shadow-xl transition-shadow duration-300 hover:scale-[1.02]">
                             <img
-                                src={"https://i.ibb.co/DDcpNXBf/image.png"}
+                                src={instructor.image}
                                 alt={instructor.name}
                                 className="rounded-full w-50 h-50 fill object-cover border"
                             />

@@ -17,7 +17,6 @@ import { use } from "react";
 import useAxios from "../hooks/useAxios";
 motion;
 
-
 export default function AddCourse() {
     const axiosSecure = useAxios();
     const [formData, setFormData] = useState({
@@ -58,14 +57,12 @@ export default function AddCourse() {
             .catch((error) => {
                 console.error("Error adding course:", error);
             });
-
-        // Reset form
-        // setFormData({
-        //     title: "",
-        //     shortDescription: "",
-        //     imageUrl: "",
-        //     duration: "",
-        // });
+        setFormData({
+            title: "",
+            shortDescription: "",
+            imageUrl: "",
+            duration: "",
+        });
         setIsSubmitting(false);
     };
 

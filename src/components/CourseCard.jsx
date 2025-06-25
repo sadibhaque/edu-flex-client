@@ -18,7 +18,7 @@ import { Link } from "react-router";
 
 function CourseCard({ course }) {
     return (
-        <Card className="overflow-hidden py-0 transition-transform duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-primary/10">
+        <Card className="border-none overflow-hidden py-0 transition-transform duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-primary/30">
             <CardHeader className="p-0">
                 <img
                     src={course.imageUrl}
@@ -27,14 +27,19 @@ function CourseCard({ course }) {
                 />
             </CardHeader>
             <CardContent className="p-4">
-                <CardTitle className="text-lg mb-2">{course.title}</CardTitle>
+                <CardTitle className="text-lg mb-2">
+                    {course.title}
+                </CardTitle>
                 <div className="flex items-center text-sm text-muted-foreground">
                     <Calendar className="h-4 w-4 mr-2" />
                     <span>Added on {course.date}</span>
                 </div>
             </CardContent>
             <CardFooter className="p-4 pt-0">
-                <Button asChild className="w-full transition-all duration-300">
+                <Button
+                    asChild
+                    className="w-full text-white transition-all duration-300"
+                >
                     <Link to={`/courses/${course._id}`}>View Details</Link>
                 </Button>
             </CardFooter>

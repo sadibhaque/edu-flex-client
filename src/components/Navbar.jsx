@@ -1,5 +1,5 @@
 import { use, useState } from "react";
-import { Link } from "react-router";
+import { Link, NavLink } from "react-router";
 import { BookOpenCheck, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -38,7 +38,6 @@ export default function Navbar() {
             });
     };
 
-    
     return (
         <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <div className="container mx-auto flex h-14 max-w-10/12 items-center justify-between">
@@ -53,13 +52,19 @@ export default function Navbar() {
                 {/* Desktop Navigation Links - Centered */}
                 <nav className="hidden md:flex flex-1 justify-center items-center gap-6 text-sm">
                     {navLinks.map((link) => (
-                        <Link
+                        <NavLink
                             key={link.to}
                             to={link.to}
-                            className="transition-colors hover:text-foreground/80 text-foreground/60"
+                            className={({ isActive }) =>
+                                `transition-colors hover:text-foreground/80 ${
+                                    isActive
+                                        ? "underline underline-offset-4 text-foreground"
+                                        : "text-foreground/60"
+                                }`
+                            }
                         >
                             {link.label}
-                        </Link>
+                        </NavLink>
                     ))}
                 </nav>
 
@@ -170,11 +175,7 @@ export default function Navbar() {
                                     Manage Courses
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />
-                                <DropdownMenuItem
-                                    onClick={() => setIsLoggedIn(false)}
-                                >
-                                    Log out
-                                </DropdownMenuItem>
+                                <DropdownMenuItem>Log out</DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
                     ) : (
@@ -215,14 +216,20 @@ export default function Navbar() {
                                 <ModeToggle />
                             </div>
                             {navLinks.map((link) => (
-                                <Link
+                                <NavLink
                                     key={link.to}
                                     to={link.to}
-                                    className="rounded-md mx-auto px-3 py-2 text-sm font-medium transition-colors hover:bg-accent"
+                                    className={({ isActive }) =>
+                                        `rounded-md mx-auto px-3 py-2 text-sm font-medium transition-colors hover:bg-accent ${
+                                            isActive
+                                                ? "underline underline-offset-4"
+                                                : ""
+                                        }`
+                                    }
                                     onClick={() => setIsMenuOpen(false)}
                                 >
                                     {link.label}
-                                </Link>
+                                </NavLink>
                             ))}
                         </nav>
                     </div>
