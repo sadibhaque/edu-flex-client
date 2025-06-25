@@ -15,10 +15,11 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router";
+import { FaFire } from "react-icons/fa";
 
-function CourseCard({ course }) {
+function PopularCourseCard({ course }) {
     return (
-        <Card className="border overflow-hidden py-0 transition-transform duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-primary/30">
+        <Card className="border-none overflow-hidden py-0 transition-transform duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-primary/30">
             <CardHeader className="p-0">
                 <img
                     src={course.imageUrl}
@@ -27,12 +28,14 @@ function CourseCard({ course }) {
                 />
             </CardHeader>
             <CardContent className="p-4">
-                <CardTitle className="text-lg mb-2">
-                    {course.title}
-                </CardTitle>
+                <CardTitle className="text-lg mb-2">{course.title}</CardTitle>
                 <div className="flex items-center text-sm text-muted-foreground">
                     <Calendar className="h-4 w-4 mr-2" />
                     <span>Added on {course.date}</span>
+                </div>
+                <div className="flex items-center text-sm text-muted-foreground">
+                    <FaFire className="h-4 w-4 mr-2 text-red-500" />
+                    <span>Sold {course.added}</span>
                 </div>
             </CardContent>
             <CardFooter className="p-4 pt-0">
@@ -47,4 +50,4 @@ function CourseCard({ course }) {
     );
 }
 
-export default CourseCard;
+export default PopularCourseCard;

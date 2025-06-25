@@ -48,6 +48,7 @@ export default function AddCourse() {
         const courseData = {
             ...formData,
             email: userEmail,
+            addedBy: userEmail,
         };
         axiosSecure
             .post(`/add-course`, courseData)

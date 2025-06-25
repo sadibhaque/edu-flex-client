@@ -21,10 +21,10 @@ import { motion } from "framer-motion";
 import { AuthContext } from "../provider/AuthProvider";
 import useAxios from "../hooks/useAxios";
 import Loading from "../components/Loading";
-import { Link } from 'react-router';
+import { Link } from "react-router";
 motion;
 
-export default function MyEnrollments() {
+export default function MyCourses() {
     const [enrolledCourses, setEnrolledCourses] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const { user } = use(AuthContext);
@@ -33,47 +33,21 @@ export default function MyEnrollments() {
     useEffect(() => {
         const fetchCourses = async () => {
             const email = await user?.email;
-            axiosSecure
-                .get(`/get-enrolled-courses/${email}`)
-                .then((response) => {
-                    setIsLoading(false);
-                    setEnrolledCourses(response.data);
-                    console.log(response.data);
-                });
+            axiosSecure.get(`/get-my-courses/${email}`).then((response) => {
+                setIsLoading(false);
+                setEnrolledCourses(response.data);
+            });
         };
         fetchCourses();
     }, [user]);
 
-    const handleRemoveEnrollment = async (id, courseId) => {
+    const handleRemoveEnrollment = async (id) => {
         setIsLoading(true);
 
-        axiosSecure
-            .patch(`/decrease-course-count/${courseId}`)
-            .then((response) => {
-                let data = {};
-                try {
-                    data = response.data ? JSON.parse(response.data) : {};
-                    if (data) {
-                        console.log("Course count decreased:");
-                    }
-                } catch (error) {
-                    console.error("JSON parse error:", error);
-                }
-            })
-            .catch((error) => {
-                console.error("Error decreasing course count:", error);
-            });
-
-        axiosSecure
-            .delete(`/remove-enrollment/${id}`)
-            .then((response) => {
-                console.log("Enrollment removal result:", response.data);
-                toast.success("You have been unenrolled from the course.");
-            })
-            .catch((error) => {
-                console.error("Error removing enrollment:", error);
-                toast.error("Error during unenrollment!.");
-            });
+        axiosSecure.delete(`/remove-course/${id}`).then((response) => {
+            console.log("Course removal result:", response.data);
+            toast.success("Course Removed Successfully.");
+        });
 
         const updatedCourses = enrolledCourses.filter(
             (course) => course._id !== id
@@ -92,18 +66,17 @@ export default function MyEnrollments() {
             <Card>
                 <CardHeader>
                     <CardTitle className="text-3xl">
-                        Courses You are Enrolled in.
+                        Courses Added by You
                     </CardTitle>
                     <CardDescription>
-                        View and manage all the courses you are currently
-                        enrolled in.
+                        View and manage all the courses you added.
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
                     {enrolledCourses.length === 0 ? (
                         <div className="text-center py-10">
                             <p className="text-muted-foreground text-lg mb-4">
-                                You haven't enrolled in any courses yet.
+                                You haven't added any courses yet.
                             </p>
                             <Button
                                 asChild

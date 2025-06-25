@@ -9,6 +9,7 @@ import Instructors from "../pages/Instructors";
 import { Login } from "../pages/Login";
 import { Register } from "../pages/Register";
 import PrivateRoute from "../contexts/PrivateRoute";
+import MyCourses from "../pages/MyCourses";
 
 const router = createBrowserRouter([
     {
@@ -45,8 +46,12 @@ const router = createBrowserRouter([
                 ),
             },
             {
-                path: "/instructors",
-                element: <Instructors />,
+                path: "/my-courses",
+                element: (
+                    <PrivateRoute>
+                        <MyCourses></MyCourses>
+                    </PrivateRoute>
+                ),
             },
             {
                 path: "*",

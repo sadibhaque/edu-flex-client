@@ -19,7 +19,7 @@ const navLinks = [
     { to: "/courses", label: "Courses" },
     { to: "/add-course", label: "Add Course" },
     { to: "/my-enrollments", label: "My Enrollments" },
-    { to: "/instructors", label: "Instructors" },
+    { to: "/my-courses", label: "My Courses" },
 ];
 
 export default function Navbar() {
@@ -147,7 +147,10 @@ export default function Navbar() {
                                 >
                                     <Avatar className="h-8 w-8">
                                         <AvatarImage
-                                            src="/placeholder.svg?height=32&width=32"
+                                            src={
+                                                user.photoURL ||
+                                                "https://i.pinimg.com/736x/2f/15/f2/2f15f2e8c688b3120d3d26467b06330c.jpg"
+                                            }
                                             alt="@shadcn"
                                         />
                                         <AvatarFallback>JD</AvatarFallback>

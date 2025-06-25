@@ -33,6 +33,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import Loading from "../components/Loading";
 import useAxios from "../hooks/useAxios";
+import PopularCourseCard from "../components/PopularCourseCard";
 
 const sliderItems = [
     {
@@ -262,7 +263,7 @@ const Home = () => {
             </section>
 
             {/* Latest Courses Section */}
-            <section className="py-16 md:py-24 bg-background">
+            <section className="px-5 lg:px-0 py-16 md:py-24 bg-background">
                 <div className="container mx-auto">
                     <motion.h2
                         ref={latestCoursesRef}
@@ -302,7 +303,7 @@ const Home = () => {
             </section>
 
             {/* Popular Courses Section */}
-            <section className="py-16 md:py-24 bg-accent">
+            <section className="px-5 lg:px-0 py-16 md:py-24 bg-accent">
                 <div className="container mx-auto">
                     <motion.h2
                         ref={popularCoursesRef}
@@ -333,7 +334,7 @@ const Home = () => {
                                     key={course._id}
                                     variants={cardVariants}
                                 >
-                                    <CourseCard course={course} />
+                                    <PopularCourseCard course={course} />
                                 </motion.div>
                             ))
                         )}
@@ -342,7 +343,7 @@ const Home = () => {
             </section>
 
             {/* Testimonials Section */}
-            <section className="py-16 md:py-24 bg-background">
+            <section className="px-5 lg:px-0 py-16 md:py-24 bg-background">
                 <div className="container mx-auto">
                     <motion.h2
                         ref={testimonialsRef}
@@ -413,7 +414,7 @@ const Home = () => {
             </section>
 
             {/* FAQ Section */}
-            <section className="py-16 md:py-24 bg-accent">
+            <section className="px-5 lg:px-0 py-16 md:py-24 bg-accent">
                 <div className="container mx-auto max-w-3xl">
                     <motion.h2
                         ref={faqRef}

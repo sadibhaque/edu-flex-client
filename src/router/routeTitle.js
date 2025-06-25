@@ -1,10 +1,10 @@
 // routeTitles.js
 const routeTitles = {
-    "/": "Home",
+    "/": "Home - EduFlex",
     "/courses": "Courses",
     "/add-course": "Add Course",
     "/my-enrollments": "My Enrollments",
-    "/instructors": "Instructors",
+    "/my-courses": "My Courses",
 };
 
 export default routeTitles;

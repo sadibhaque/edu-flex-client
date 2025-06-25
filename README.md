@@ -1,12 +1,57 @@
-# React + Vite
+# EduFlex
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+EduFlex is a modern, responsive learning platform built with React and Vite that allows users to browse, enroll, and manage online courses.
 
-Currently, two official plugins are available:
+**Live Demo:** https://eduflex-client.vercel.app/
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Purpose
 
-## Expanding the ESLint configuration
+This project serves as a full-stack education portal where instructors can add courses and students can explore, enroll, and keep track of their learning progress. It demonstrates secure authentication, dynamic course management, and real-time data updates.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Key Features
+
+-   User authentication and authorization via Firebase
+-   Browse all courses, view details, and search by popularity or recency
+-   Real-time enroll and unenroll functionality with MongoDB backend
+-   Increment and decrement course view or enrollment count via secure REST API
+-   Responsive navigation with active-link highlighting
+-   Image slider on the homepage with custom navigation arrows
+-   Animated UI components using Framer Motion
+-   Light and dark theme toggle
+
+## Tech Stack & NPM Packages
+
+-   React & Vite
+-   Tailwind CSS & `@tailwindcss/vite`
+-   Firebase Authentication (`firebase`)
+-   Axios for HTTP requests (`axios`)
+-   React Router (`react-router`)
+-   MongoDB & Node.js (server)
+-   Data fetching & hooks (`useAxios`, `useAuth`)
+-   Slideshow: `react-slick`, `slick-carousel`
+-   Animations: `framer-motion` & `motion`
+-   Icons: `lucide-react`, `react-icons`
+-   UI components: `@radix-ui/react-accordion`, `@radix-ui/react-avatar`, `@radix-ui/react-dropdown-menu`, etc.
+-   Notifications: `sonner`
+-   Utility libraries: `clsx`, `class-variance-authority`, `tailwind-merge`
+
+## Getting Started
+
+1. Clone the repo and install dependencies:
+
+    ```bash
+    cd edu-flex-client
+    npm install
+    ```
+
+2. Start the development server:
+
+    ```bash
+    npm run dev
+    ```
+
+3. Open http://localhost:3000 in your browser.
+
+## Server
+
+The backend API is hosted separately at `https://eduflex-server.vercel.app`. It manages courses and enrollments using Express and MongoDB.

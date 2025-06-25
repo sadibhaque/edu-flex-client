@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Clock, BookOpen, Star, Users, Award } from "lucide-react";
-import { Link, useLoaderData } from "react-router";
+import { Link, useLoaderData, useNavigate } from "react-router";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import useAxios from "../hooks/useAxios";
@@ -23,12 +23,14 @@ export default function CourseDetails() {
     const axiosSecure = useAxios();
     const { user, loading } = useAuth();
 
+    const navigate = useNavigate();
+
     useEffect(() => {
         if (loading) {
             return;
         }
         axiosSecure
-            .get(`/get-enrolled-courses/${user.email}/${course._id}`)
+            .get(`/get-enrolled-courses/${user?.email}/${course._id}`)
             .then((res) => {
                 console.log(res.data);
                 setEnrolledCourse(res.data);
@@ -43,7 +45,7 @@ export default function CourseDetails() {
         if (loading) {
             return;
         }
-        axiosSecure.get(`/get-enrolled-courses/${user.email}`).then((res) => {
+        axiosSecure.get(`/get-enrolled-courses/${user?.email}`).then((res) => {
             console.log(res.data);
             setEnrolledCourses(res.data);
             setIsLoading(false);
@@ -52,6 +54,11 @@ export default function CourseDetails() {
 
     const handleEnrollToggle = () => {
         setIsLoading(true);
+
+        if (!user) {
+            navigate("/login");
+            return;
+        }
 
         setTimeout(() => {
             if (isEnrolled) {
