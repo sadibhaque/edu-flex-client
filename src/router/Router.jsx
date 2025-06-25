@@ -54,6 +54,14 @@ const router = createBrowserRouter([
                 ),
             },
             {
+                path: "/instructors",
+                element: (
+                    <PrivateRoute>
+                        <Instructors></Instructors>
+                    </PrivateRoute>
+                ),
+            },
+            {
                 path: "*",
                 element: (
                     <div className="text-center text-2xl">

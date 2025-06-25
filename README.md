@@ -49,8 +49,6 @@ This project serves as a full-stack education portal where instructors can add c
     npm run dev
     ```
 
-3. Open https://sadib-assignment-11-ph.netlify.app/ in your browser.
-
 ## Server
 
 The backend API is hosted separately at `https://eduflex-server.vercel.app`. It manages courses and enrollments using Express and MongoDB.

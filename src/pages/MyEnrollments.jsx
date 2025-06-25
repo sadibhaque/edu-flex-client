@@ -21,7 +21,7 @@ import { motion } from "framer-motion";
 import { AuthContext } from "../provider/AuthProvider";
 import useAxios from "../hooks/useAxios";
 import Loading from "../components/Loading";
-import { Link } from 'react-router';
+import { Link } from "react-router";
 motion;
 
 export default function MyEnrollments() {
@@ -87,7 +87,7 @@ export default function MyEnrollments() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: "easeOut" }}
-            className="container mx-auto px-5 lg:px-0 py-12 md:py-16"
+            className="container mx-auto px-5 lg:px-0 py-12 md:py-16 min-h-screen"
         >
             <Card>
                 <CardHeader>

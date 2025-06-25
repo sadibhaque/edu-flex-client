@@ -43,7 +43,7 @@ export default function Footer() {
                         <ul className="mt-4 space-y-2">
                             <li>
                                 <Link
-                                    href="/courses"
+                                    to="/courses"
                                     className="text-sm text-muted-foreground hover:text-primary"
                                 >
                                     Browse Courses
@@ -51,7 +51,7 @@ export default function Footer() {
                             </li>
                             <li>
                                 <Link
-                                    href="/instructors"
+                                    to="/instructors"
                                     className="text-sm text-muted-foreground hover:text-primary"
                                 >
                                     Our Instructors
@@ -59,18 +59,18 @@ export default function Footer() {
                             </li>
                             <li>
                                 <Link
-                                    href="#"
+                                    to="/my-enrollments"
                                     className="text-sm text-muted-foreground hover:text-primary"
                                 >
-                                    About Us
+                                    Course You Enrolled
                                 </Link>
                             </li>
                             <li>
                                 <Link
-                                    href="#"
+                                    to="/my-courses"
                                     className="text-sm text-muted-foreground hover:text-primary"
                                 >
-                                    Careers
+                                    Course You Added
                                 </Link>
                             </li>
                         </ul>
