@@ -2,7 +2,7 @@
 
 EduFlex is a modern, responsive learning platform built with React and Vite that allows users to browse, enroll, and manage online courses.
 
-**Live Demo:** https://eduflex-client.vercel.app/
+**Live Demo:** https://sadib-assignment-11-ph.netlify.app/
 
 ## Purpose
 
@@ -26,14 +26,13 @@ This project serves as a full-stack education portal where instructors can add c
 -   Firebase Authentication (`firebase`)
 -   Axios for HTTP requests (`axios`)
 -   React Router (`react-router`)
--   MongoDB & Node.js (server)
+-   MongoDB & Node.js Express js (server)
 -   Data fetching & hooks (`useAxios`, `useAuth`)
 -   Slideshow: `react-slick`, `slick-carousel`
 -   Animations: `framer-motion` & `motion`
 -   Icons: `lucide-react`, `react-icons`
--   UI components: `@radix-ui/react-accordion`, `@radix-ui/react-avatar`, `@radix-ui/react-dropdown-menu`, etc.
+-   UI components: `shadcn`,react-dropdown-menu`, etc.
 -   Notifications: `sonner`
--   Utility libraries: `clsx`, `class-variance-authority`, `tailwind-merge`
 
 ## Getting Started
 
@@ -50,8 +49,18 @@ This project serves as a full-stack education portal where instructors can add c
     npm run dev
     ```
 
-3. Open http://localhost:3000 in your browser.
+3. Open https://sadib-assignment-11-ph.netlify.app/ in your browser.
 
 ## Server
 
 The backend API is hosted separately at `https://eduflex-server.vercel.app`. It manages courses and enrollments using Express and MongoDB.
+
+### 1. Clone the Repositories
+
+```bash
+# Client-side
+git clone https://github.com/Programming-Hero-Web-Course4/b11a11-client-side-sadibhaque
+
+# Server-side
+git clone https://github.com/Programming-Hero-Web-Course4/b11a11-server-side-sadibhaque
+```
