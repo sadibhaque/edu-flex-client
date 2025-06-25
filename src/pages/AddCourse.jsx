@@ -131,7 +131,7 @@ export default function AddCourse() {
                         </div>
                         <Button
                             type="submit"
-                            className="w-full transition-all duration-300"
+                            className="w-full text-white transition-all duration-300"
                             disabled={isSubmitting}
                         >
                             {isSubmitting ? "Adding Course..." : "Add Course"}

@@ -107,7 +107,7 @@ export default function MyEnrollments() {
                             </p>
                             <Button
                                 asChild
-                                className="transition-all duration-300"
+                                className="transition-all text-white duration-300"
                             >
                                 <Link to="/courses">Browse Courses</Link>
                             </Button>
