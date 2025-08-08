@@ -1,5 +1,7 @@
 # EduFlex
 
+<img src="https://i.ibb.co.com/hJ8CfP3L/image.png" alt="Banner" style="width:100%;"/>
+
 EduFlex is a modern, responsive learning platform built with React and Vite that allows users to browse, enroll, and manage online courses.
 
 **Live Demo:** https://the-edu-flex.netlify.app/
