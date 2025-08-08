@@ -2,7 +2,7 @@
 
 EduFlex is a modern, responsive learning platform built with React and Vite that allows users to browse, enroll, and manage online courses.
 
-**Live Demo:** https://sadib-assignment-11-ph.netlify.app/
+**Live Demo:** https://the-edu-flex.netlify.app/
 
 ## Purpose
 
@@ -52,13 +52,3 @@ This project serves as a full-stack education portal where instructors can add c
 ## Server
 
 The backend API is hosted separately at `https://eduflex-server.vercel.app`. It manages courses and enrollments using Express and MongoDB.
-
-### 1. Clone the Repositories
-
-```bash
-# Client-side
-git clone https://github.com/Programming-Hero-Web-Course4/b11a11-client-side-sadibhaque
-
-# Server-side
-git clone https://github.com/Programming-Hero-Web-Course4/b11a11-server-side-sadibhaque
-```
