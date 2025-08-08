@@ -36,21 +36,25 @@ This project serves as a full-stack education portal where instructors can add c
 -   UI components: `shadcn`,react-dropdown-menu`, etc.
 -   Notifications: `sonner`
 
-## Getting Started
+---
 
-1. Clone the repo and install dependencies:
+## 🛠️ Getting Started
+
+1. Clone the Repository
+
+    ```bash
+    git clone https://github.com/sadibhaque/edu-flex-client.git
+    ```
+
+2. Install dependencies:
 
     ```bash
     cd edu-flex-client
     npm install
     ```
 
-2. Start the development server:
+3. Start the development server:
 
     ```bash
     npm run dev
     ```
-
-## Server
-
-The backend API is hosted separately at `https://eduflex-server.vercel.app`. It manages courses and enrollments using Express and MongoDB.
