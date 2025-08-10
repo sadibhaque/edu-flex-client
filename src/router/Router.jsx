@@ -10,6 +10,7 @@ import { Login } from "../pages/Login";
 import { Register } from "../pages/Register";
 import PrivateRoute from "../contexts/PrivateRoute";
 import MyCourses from "../pages/MyCourses";
+import NotFound from "../pages/NotFound";
 
 const router = createBrowserRouter([
     {
@@ -63,11 +64,7 @@ const router = createBrowserRouter([
             },
             {
                 path: "*",
-                element: (
-                    <div className="text-center text-2xl">
-                        404 - Page Not Found
-                    </div>
-                ),
+                element: <NotFound />,
             },
             {
                 path: "/login",
