@@ -199,7 +199,7 @@ export default function Navbar() {
                             </Button>
                             <Button
                                 asChild
-                                className="transition-all duration-300"
+                                className="transition-all text-white duration-300"
                             >
                                 <Link to="/register">Register</Link>
                             </Button>
