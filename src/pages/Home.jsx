@@ -145,7 +145,7 @@ const Home = () => {
             }
         };
         fetchCourses();
-    }, []);
+    }, [axiosSecure]);
 
     const sectionTitleVariants = {
         hidden: { opacity: 0, y: 50 },
@@ -205,16 +205,6 @@ const Home = () => {
         autoplaySpeed: 3000,
         nextArrow: <NextArrow />,
         prevArrow: <PrevArrow />,
-        responsive: [
-            {
-                breakpoint: 768,
-                settings: {
-                    arrows: false,
-                    dots: true,
-                    autoplaySpeed: 2500,
-                },
-            },
-        ],
     };
 
     const [isLoading, setIsLoading] = useState(true);
@@ -232,7 +222,7 @@ const Home = () => {
                     {sliderItems.map((item, index) => (
                         <div
                             key={index}
-                            className="relative h-[55vh] md:h-[80vh]"
+                            className="relative h-[60vh] md:h-[80vh]"
                         >
                             <img
                                 src={item.bgImage}
@@ -240,12 +230,12 @@ const Home = () => {
                                 className="absolute z-0 w-full h-full object-cover"
                             />
                             <div className="absolute inset-0 bg-black/60 z-10" />
-                            <div className="relative z-20 container mx-auto px-4 flex flex-col items-center justify-center h-full text-center text-white">
+                            <div className="relative z-20 container mx-auto flex flex-col items-center justify-center h-full text-center text-white">
                                 <motion.h1
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ duration: 0.8, delay: 0.3 }}
-                                    className="text-3xl md:text-6xl font-bold mb-3"
+                                    className="text-4xl md:text-6xl font-bold mb-4"
                                 >
                                     {item.title}
                                 </motion.h1>
@@ -253,7 +243,7 @@ const Home = () => {
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ duration: 0.8, delay: 0.5 }}
-                                    className="text-base md:text-xl max-w-2xl mb-6 line-clamp-3 md:line-clamp-none"
+                                    className="text-lg md:text-xl max-w-3xl mb-8"
                                 >
                                     {item.subtitle}
                                 </motion.p>
@@ -265,7 +255,7 @@ const Home = () => {
                                     <Button
                                         size="lg"
                                         asChild
-                                        className="transition-all text-white duration-300 px-5 py-2.5 md:px-6 md:py-3"
+                                        className="transition-all text-white duration-300"
                                     >
                                         <Link to="/courses">
                                             Explore Courses{" "}
@@ -572,7 +562,7 @@ export default Home;
 
 const NextArrow = ({ onClick }) => (
     <div
-        className="absolute top-1/2 right-4 transform -translate-y-1/2 z-20 cursor-pointer hidden md:flex"
+        className="absolute top-1/2 right-4 transform -translate-y-1/2 z-20 cursor-pointer"
         onClick={onClick}
     >
         <ChevronRight size={30} color="white" />
@@ -580,7 +570,7 @@ const NextArrow = ({ onClick }) => (
 );
 const PrevArrow = ({ onClick }) => (
     <div
-        className="absolute top-1/2 left-4 transform -translate-y-1/2 z-20 cursor-pointer hidden md:flex"
+        className="absolute top-1/2 left-4 transform -translate-y-1/2 z-20 cursor-pointer"
         onClick={onClick}
     >
         <ChevronLeft size={30} color="white" />
