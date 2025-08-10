@@ -129,7 +129,7 @@ export default function Navbar() {
                             <Button
                                 asChild
                                 variant="ghost"
-                                className="transition-all duration-300"
+                                className="transition-all duration-300 border"
                             >
                                 <Link to="/login">Login</Link>
                             </Button>
