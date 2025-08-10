@@ -27,13 +27,13 @@ function CourseCard({ course }) {
                 />
             </CardHeader>
             <CardContent className="p-4">
-                <CardTitle className="text-lg mb-2">
-                    {course.title}
-                </CardTitle>
+                <CardTitle className="text-lg mb-2">{course.title}</CardTitle>
                 {/* New: single-line truncated description */}
                 <p
                     className="text-sm text-muted-foreground line-clamp-1 mb-2"
-                    title={(course?.shortDescription || course?.description) ?? ""}
+                    title={
+                        (course?.shortDescription || course?.description) ?? ""
+                    }
                 >
                     {(course?.shortDescription || course?.description) ?? ""}
                 </p>
