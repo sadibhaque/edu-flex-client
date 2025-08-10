@@ -30,6 +30,13 @@ function CourseCard({ course }) {
                 <CardTitle className="text-lg mb-2">
                     {course.title}
                 </CardTitle>
+                {/* New: single-line truncated description */}
+                <p
+                    className="text-sm text-muted-foreground line-clamp-1 mb-2"
+                    title={(course?.shortDescription || course?.description) ?? ""}
+                >
+                    {(course?.shortDescription || course?.description) ?? ""}
+                </p>
                 <div className="flex items-center text-sm text-muted-foreground">
                     <Calendar className="h-4 w-4 mr-2" />
                     <span>Added on {course.date}</span>
