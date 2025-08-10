@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router";
 import { Compass, Home, BookOpen } from "lucide-react";
+motion;
 
 export default function NotFound() {
     useEffect(() => {
@@ -10,7 +11,7 @@ export default function NotFound() {
     }, []);
 
     return (
-        <div className="relative isolate">
+        <div className="relative isolate min-h-screen">
             {/* Soft background accents */}
             <div className="pointer-events-none absolute inset-0 -z-10">
                 <div className="absolute -top-20 -left-20 h-72 w-72 rounded-full bg-primary/10 blur-3xl" />
