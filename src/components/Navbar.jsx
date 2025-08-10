@@ -26,6 +26,13 @@ export default function Navbar() {
     const { user, logoutUser } = use(AuthContext);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+    // Filter out private-only links when logged out
+    const visibleLinks = user
+        ? navLinks
+        : navLinks.filter(
+              (l) => l.to !== "/my-enrollments" && l.to !== "/my-courses"
+          );
+
     const handleLogout = (e) => {
         e.preventDefault();
 
@@ -51,7 +58,7 @@ export default function Navbar() {
 
                 {/* Desktop Navigation Links - Centered */}
                 <nav className="hidden md:flex flex-1 justify-center items-center gap-6 text-sm">
-                    {navLinks.map((link) => (
+                    {visibleLinks.map((link) => (
                         <NavLink
                             key={link.to}
                             to={link.to}
@@ -121,7 +128,7 @@ export default function Navbar() {
                             <ModeToggle />
                             <Button
                                 asChild
-                                variant="ghost"z
+                                variant="ghost"
                                 className="transition-all duration-300"
                             >
                                 <Link to="/login">Login</Link>
@@ -218,7 +225,7 @@ export default function Navbar() {
                             <div className="mx-auto">
                                 <ModeToggle />
                             </div>
-                            {navLinks.map((link) => (
+                            {visibleLinks.map((link) => (
                                 <NavLink
                                     key={link.to}
                                     to={link.to}
