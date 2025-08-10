@@ -243,7 +243,7 @@ const Home = () => {
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ duration: 0.8, delay: 0.5 }}
-                                    className="text-lg md:text-xl max-w-3xl mb-8"
+                                    className="text-lg md:text-xl w-[80%] md:w-auto lg:max-w-3xl mb-8"
                                 >
                                     {item.subtitle}
                                 </motion.p>
