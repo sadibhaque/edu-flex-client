@@ -208,8 +208,15 @@ const Home = () => {
     };
 
     const [isLoading, setIsLoading] = useState(true);
+
+    // Choose featured courses from popular first, else fallback to latest
+    const featuredCourses = (
+        popularCourses?.length ? popularCourses : courses
+    ).slice(0, 3);
+
     return (
         <div>
+            {/* Hero Slider */}
             <section className="relative">
                 <Slider {...settings}>
                     {sliderItems.map((item, index) => (
@@ -260,6 +267,41 @@ const Home = () => {
                         </div>
                     ))}
                 </Slider>
+            </section>
+
+            {/* Featured Courses Section */}
+            <section className="px-5 lg:px-0 py-16 md:py-24 bg-accent">
+                <div className="container mx-auto">
+                    <motion.h2
+                        variants={sectionTitleVariants}
+                        initial="hidden"
+                        animate="visible"
+                        className="text-3xl md:text-4xl font-bold text-center mb-12"
+                    >
+                        Featured Courses
+                    </motion.h2>
+                    <motion.div
+                        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+                        initial="hidden"
+                        animate="visible"
+                        variants={{
+                            visible: { transition: { staggerChildren: 0.1 } },
+                        }}
+                    >
+                        {isLoading ? (
+                            <Loading />
+                        ) : (
+                            featuredCourses.map((course) => (
+                                <motion.div
+                                    key={course._id}
+                                    variants={cardVariants}
+                                >
+                                    <CourseCard course={course} />
+                                </motion.div>
+                            ))
+                        )}
+                    </motion.div>
+                </div>
             </section>
 
             {/* Latest Courses Section */}
@@ -339,6 +381,38 @@ const Home = () => {
                             ))
                         )}
                     </motion.div>
+                </div>
+            </section>
+
+            {/* Sales Promotion Section */}
+            <section className="px-5 lg:px-0 py-16 md:py-24">
+                <div className="container mx-auto">
+                    <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-primary to-blue-600 p-8 md:p-12 ring-1 ring-white/15 text-white shadow-xl">
+                        <span className="pointer-events-none absolute -top-12 -right-10 h-48 w-48 rounded-full bg-white/10 blur-2xl" />
+                        <span className="pointer-events-none absolute -bottom-12 -left-10 h-48 w-48 rounded-full bg-white/10 blur-2xl" />
+
+                        <div className="relative z-10 max-w-3xl">
+                            <span className="inline-flex items-center rounded-full bg-white/20 px-3 py-1 text-sm font-medium tracking-wide">
+                                Limited time offer
+                            </span>
+                            <h2 className="mt-4 text-3xl md:text-4xl font-bold tracking-tight">
+                                Save 30% on All Courses This Week
+                            </h2>
+                            <p className="mt-3 text-white/90">
+                                Level up your skills with limited-time
+                                discounts. Offer ends soon.
+                            </p>
+                            <div className="mt-6">
+                                <Button
+                                    asChild
+                                    size="lg"
+                                    className="bg-white text-primary hover:bg-white/90"
+                                >
+                                    <Link to="/courses">Browse Deals</Link>
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
 
@@ -445,6 +519,39 @@ const Home = () => {
                             </motion.div>
                         ))}
                     </Accordion>
+                </div>
+            </section>
+
+            {/* Newsletter Section */}
+            <section className="px-5 lg:px-0 py-16 md:py-24 bg-background">
+                <div className="container mx-auto max-w-4xl">
+                    <Card className="p-6 md:p-10 shadow-md">
+                        <CardHeader className="p-0 mb-4">
+                            <CardTitle className="text-2xl md:text-3xl">
+                                Subscribe to our Newsletter
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent className="p-0">
+                            <p className="text-muted-foreground mb-6">
+                                Get updates on new courses, discounts, and
+                                learning resources. No spam.
+                            </p>
+                            <form className="flex flex-col sm:flex-row gap-3">
+                                <input
+                                    type="email"
+                                    required
+                                    placeholder="Enter your email"
+                                    className="flex-1 rounded-md border px-4 py-3 bg-background"
+                                />
+                                <Button
+                                    type="submit"
+                                    className="h-12 text-white"
+                                >
+                                    Subscribe
+                                </Button>
+                            </form>
+                        </CardContent>
+                    </Card>
                 </div>
             </section>
         </div>
